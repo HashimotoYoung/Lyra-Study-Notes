@@ -68,6 +68,11 @@ FGameplayEffectContextHandle EffectContext // 上下文信息句柄
 
 ---
 
+### FGameplayEffectSpecForRPC
+todo...
+
+---
+
 ### FActiveGameplayEffectsContainer :  `FFastArraySerializer`
 
 :star: 虽然命名以 "Container" 结尾, 但实际类似于 Manager 类,是 GE 中**最核心**的数据结构
@@ -137,17 +142,46 @@ ApplyModToAttribute(const FGameplayAttribute &Attribute, TEnumAsByte<EGameplayMo
 
 
 
-##### 其它方法:
-```cpp
-void AddActiveGameplayEffectGrantedTagsAndModifiers(FActiveGameplayEffect& Effect, bool bInvokeGameplayCueEvents)
-void RemoveActiveGameplayEffectGrantedTagsAndModifiers(const FActiveGameplayEffect& Effect, bool bInvokeGameplayCueEvents)
-```
+<br>
+
+#### `AddActiveGameplayEffectGrantedTagsAndModifiers(FActiveGameplayEffect& Effect, bool bInvokeGameplayCueEvents)`
+
+:memo: 在确认"启用"一个GE后, 添加其所携带的 Tag 和 Mods
+
+1: 加锁 *FScopedActiveGameplayEffectLock*
+2: 处理 Modifiers
+  - **if** `Effect.Spec` is No Period, **遍历 `Effect.Spec.Modifiers`, 对于每个Mod:**
+    - **if** Owner ASC 没有任何 AS 包含该 Modifier 所指定的 attribute  
+      - **continue** 
+    - :pushpin: **FindOrCreate 一个 `FAggregator` 并和该 attribute 进行绑定** , 
+    - 添加 Mod 到此 `FAggregator` 中
+      - `FAggregator::AddAggregatorMod(...)`
+  
+  - **else** todo... (peroid处理)
+
+3: 授予 *附带的 Tags* 到 Owner ASC
+
+4: 授予 `GA Specs` 到 Owner ASC
+
+5: 触发 Add GCue 流
+- `Owner->InvokeGameplayCueEvent(Effect.Spec, EGameplayCueEvent::OnActive)`
+`Owner->InvokeGameplayCueEvent(Effect.Spec, EGameplayCueEvent::WhileActive)`
+
+6: **Broadcast** "已添加一个 Active GE" : `OnActiveGameplayEffectAddedDelegateToSelf`
+
 ---
 
 ### FActiveGameplayEffect : `FastArraySerializerItem`
 
 ##### 主要属性:
 `FTimerHandle PeriodHandle`, `FTimerHandle DurationHandle`
+
+`FPredictionKey	PredictionKey`
+- 附带的预测Key
+
+`bool bIsInhibited`
+- UPROPERTY(NotReplicated)
+- 表示此 GE 处于启用(`false`)或禁止(`true`)状态
 
 ---
 ### FGameplayEffectContext

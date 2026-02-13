@@ -80,7 +80,7 @@ Not:
 ---
 # UE Basics
 
-## UObject 万类起源
+## UObject 
 
 **大部分情况下**, 新建的 Class 应该去继承 `UObject`或 `USTRUCT`, 原因如下:
 
@@ -146,7 +146,7 @@ void MyClass:ReadCDO(){
 # Actor
 
 ### Actor's Life Cycle
-![img](./_img/actorLifeCycle.png)
+![img](../_img/actorLifeCycle.png)
 
 ---
 

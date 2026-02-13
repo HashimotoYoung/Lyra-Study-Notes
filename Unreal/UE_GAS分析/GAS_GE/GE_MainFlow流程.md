@@ -153,7 +153,7 @@ FActiveGameplayEffect* FActiveGameplayEffectsContainer::ApplyGameplayEffectSpec(
 #### Internal Add Active GE 流
 
 主要处理当添加一个 `FActiveGameplayEffect`后, ASC 等模块所受到的影响
-- 属于内部 private 流程
+- 属于内部流程
 - **只有 Duration-based GE** 会进入此流程
 ```cpp
 FActiveGameplayEffectsContainer::InternalOnActiveGameplayEffectAdded(FActiveGameplayEffect& Effect)
@@ -166,27 +166,15 @@ FActiveGameplayEffectsContainer::InternalOnActiveGameplayEffectAdded(FActiveGame
 
 3: 建立绑定关系和 MMC 类or实例?? used by Effect.Modifiers
 
-4: :star: **更新 Effect 的禁用状态:**  `FActiveGameplayEffect::CheckOngoingTagRequirements()`
-   > :memo: 每个 FActiveGameplayEffect 都存在 **启用/禁用** 的概念 (`bIsInhibited`), 这里在Add时进行一次更新
+4: :star: **尝试更新 Effect 的禁用状态:**  `FActiveGameplayEffect::CheckOngoingTagRequirements()`
+   > :memo: 每个 FActiveGameplayEffect 都存在 **启用/禁用** 的概念 (`bIsInhibited`), 这里在Add时进行一次检查
 
-检查是否满足切换条件
-  - 判断完全基于 `GE->OngoingTagRequirements` 
+- 检测当前的 Inhibited 状态
+  - `bool bShouldBeInhibited = !Spec.Def->OngoingTagRequirements.RequirementsMet(OwnerTags)` 
 
-**if** 需要切换, 启用(Add) 或 禁用(Remove) : **Effect 附带的 GrantedTags 和 Modifiers** 
-> 这里以 Add 为例
-- 施加区域锁 *FScopedAggregatorOnDirtyBatch*
-- 处理 Modifiers, 会根据 if Effect has Peroid 做不同处理
-  - **if**  No Period, **遍历** `Effect.Spec.Modifiers`, 对于每个Mod:
-    - 检查 OwnerASC 是否配有 **AS** for the attribute (Modifier指定), continue if not.
-    - **FindOrCreate 一个 `FAggregator`** for the attribute , then Add Mod to it
-  
-  - **else if** *$IsAuthority*  
-    - todo... peroid处理
-- Grant *附带的各种Tags* to Owner(ASC)
-- **if** *$IsOwnerAuthority*, Grant GA Specs to Owner(ASC)
-- 触发 Add GCue 流
-- **Broadcast** "已添加一个 Active GE" : `Owner->OnActiveGameplayEffectAddedDelegateToSelf`
-
+- **if** 需要切换,更新 `bIsInhibited`, 并 Add or Remove **Effect 附带的 GrantedTags 和 Modifiers** 
+  - `FAGEContainer::AddActiveGameplayEffectGrantedTagsAndModifiers(...)`
+  - `FAGEContainer::RemoveActiveGameplayEffectGrantedTagsAndModifiers(...)`
 
 
 ---

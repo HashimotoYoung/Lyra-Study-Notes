@@ -34,9 +34,10 @@ ASC 基本可看作是一个 **Manager** of GAS Elements
 
 `TObjectPtr<AActor> OwnerActor`
 `TObjectPtr<AActor> AvatarActor`
+
 - 皆为 UPROPERTY(ReplicatedUsing = OnRep_OwningActor)
-- Owner 和 Avatar 一般都 **需要 implement  `IAbilitySystemInterface`**
-- 通常在其 Owner's **Constructor** 中创建
+- Owner 和 Avatar 一般**需要 implement  `IAbilitySystemInterface`**
+- 通常在 Owner's **Constructor** 中创建 ASC
   ```cpp
   // in ALyraPlayerState.cpp 
   AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<ULyraAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
