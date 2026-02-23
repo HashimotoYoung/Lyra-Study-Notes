@@ -1,5 +1,5 @@
 
-# :books: Lyra 学习笔记 
+# :books: Young's Lyra 学习笔记 
 
 ## 📖 简介
 
@@ -7,6 +7,7 @@
 
 - 主要着重于 Gameplay 方向
 - 基于引擎版本: **Unreal Engine 5.2+**
+- 建议下载后使用 Markdown Preview Enhanced 插件预览
 
 *🙏 如发现错误或理解偏差, 欢迎指正和交流*
 
@@ -42,9 +43,6 @@
 - [武器系统](./UE_Lyra/Lyra_InventoryAndWeapon/Lyra_Weapon.md)
 
 
-
-
-
-
-
-
+---
+#### :pushpin: 寻求上北广深 UE Gameplay 方向的工作机会:
+- 有意者可提供联系方式至 `hashimotoyoung[at]163.com` 
