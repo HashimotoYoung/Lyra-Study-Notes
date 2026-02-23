@@ -1,9 +1,3 @@
-
-Dirty? 
-forceupdate?
-// todo: conditional replication
-
----
 ### FAQ:
 
 ###### How ensure multiple related properties arrive / apply together on a client ?

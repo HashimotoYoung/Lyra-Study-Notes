@@ -16,6 +16,7 @@
 
 #### 典型 Outer 关系:
 - `AActor` => `ULevel` (99%的情况下)
+  - :pushpin: 包括 PlayerState, Controller, GameState...
 - `UActorComponent` => `AActor`  
   - :warning: `USceneComponent`'s Outer 通常为 `AActor`, `USceneComponent` 之间则通过 Attachment 建立父子关系
 - `UStaticMesh`, `UTexture`, `UMaterial`, `USoundWave`, `UAnimSequence`, etc. => `UPackage`
@@ -33,12 +34,13 @@
 ### Owner (Actor)
 
 Actor层新增概念, 描述 `AActor` 与 `AActor` 间的归属关系
-```cpp
-// in Actor.h
-UPROPERTY(ReplicatedUsing = OnRep_Owner)
-TObjectPtr<AActor> Owner;
-```
-- An actor's Owner can be null
+- Actor's Owner must be another Actor, and it can be **NULL**
+  ```cpp
+  // in Actor.h
+  UPROPERTY(ReplicatedUsing = OnRep_Owner)
+  TObjectPtr<AActor> Owner;
+  ```
+
 - :pushpin: 主要作用: 
   - **RPC, Relevancy** (`bNetUseOwnerRelevancy`, `bOnlyRelevantToOwner`)
   - **Visibility** (`bOwnerNoSee`,`bOnlyOwnerSee`)
@@ -48,7 +50,8 @@ TObjectPtr<AActor> Owner;
 
 The Owner **varies greatly** depending on the type of Actor and its role:
 
-- 自己的 `APlayerState` => `AIController/PlayerController` 
+- `APlayerState` => `AIController or APlayerController` 
+- `APlayerController` => `UNetConnection`
 
 - Weapons or Inventory Items => `APawn/ACharacter` that is holding or carrying them.
 

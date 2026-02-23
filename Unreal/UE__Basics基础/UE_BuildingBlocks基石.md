@@ -12,10 +12,7 @@
 Make it can be **serialized, replicated, edited in the editor**, etc.
 <br>
 
-###### *3. What is  `Event Node` in Blueprint ?*
-[Answer](./InDepth/Topic_EventNode分析.md)
-
-###### *4. GetTransientPackage()的作用 ?*
+###### *3. GetTransientPackage()的作用 ?*
 
 该方法会返回 **Transient** Package, which is a special **global UPackage object** in Unreal Engine, it acts as a **"dummy" ROOT outer** for temporary objects.
 
@@ -41,7 +38,7 @@ UGameplayEffect* Effect = NewObject<UGameplayEffect>();
 ```
 <br>
 
-###### *5. 哪些Unreal类通常should be inherited, 哪些类通常not ?*
+###### *4. 哪些Unreal类通常should be inherited, 哪些类通常not ?*
 Should:
 - GameInstance; GameState; GameMode; PlayerController; PlayerState; Pawn/Character;
 
@@ -49,7 +46,7 @@ Not:
 - UWorld, ULevel
 <br>
 
-###### *6. How usually C++ calls BP function ?*
+###### *5. How usually C++ calls BP function ?*
 - 使用 `UFUNCTION(BlueprintNativeEvent)` / `UFUNCTION(BlueprintImplementableEvent)`
 - 使用 `DynamicDelegate.BroadCast()`
 - Call Blueprint Functions via Reflection (不建议)
@@ -62,7 +59,7 @@ Not:
 
 <br>
 
-###### *7. 如何正确地 **Attach** 一个 `USceneComponent` ？*
+###### *6. 如何正确地 **Attach** 一个 `USceneComponent` ？*
 
 主要有两种方式:
 
@@ -84,7 +81,7 @@ Not:
 
 **大部分情况下**, 新建的 Class 应该去继承 `UObject`或 `USTRUCT`, 原因如下:
 
-1. Supports GarbageCollection, 详见 [UE_GC](UE_GC.md)
+1. Supports [Garbage Collection](./UE_GC_Pointer指针.md#ue-garbage-collector)
 2. Serialization/Deserialization supported
 3. :star: Networking/Replication: Unreal 的 **built-in replication** is **based on metadata**, which comes from unreal's **reflection system**, 而只有`UObject`和`USTRUCT`支持反射
 4. Blueprint Integration
@@ -216,7 +213,7 @@ A new `UWorld` for the main menu is created.
 
 # ULevel
 
-Each `UWorld` has exactly **one Persistent Level** (`ULevel*`) which is always loaded, and an array of **Streaming Levels** (`*ULevelStreaming*[]`)
+Each `UWorld` has exactly **one Persistent Level** (`ULevel*`) which is always loaded, and an array of **Streaming Levels** (`TArray<ULevelStreaming*>`)
 
 
 ### Persistent Level

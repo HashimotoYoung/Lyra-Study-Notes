@@ -178,35 +178,24 @@ MyMulticastEvent.Remove(MyHandle);
 ---
 
 ### TFunction
-更轻量化的 delegate, 常作为参数类型使用
-##### 使用示例:
-```cpp
-// 声明 variable
-TFunction<bool(int32, int32)> FunctionTakingTwoIntsAndReturningABool = nullptr;
 
-// 绑定static方法: Assigning a pointer to a static function:
-const TFunction<void()> StaticFunctionReference = &AMyClass::MyStaticFunction;
+`TFunction<bool(int32, int32)>` 本质上是一个 Template Class **Type**
+- 可绑定 static 方法
+  ```cpp
+  TFunction<void()> StaticFunctionReference = &AMyClass::MyStaticFunction;
+  ```
+- :pushpin: 可绑定 non-static 方法 ( 需使用 Lambda ) 
+  ```cpp
+  TFunction<void()> NonStaticFunctionReference = [WeakThis = TWeakObjectPtr<AMyClass>(this)]()
+  {
+	  if(WeakThis.IsValid()) {
+		  WeakThis->MyNonStaticFunction();
+	  }
+  };
+  ```
+- 可用作函数参数
+  ```cpp
+  void MyFunction(TFunction<bool(int32, int32)> Argument);
+  ```
 
-// 绑定实例回调: Assigning a "pointer" to a non-static member function (done via a lambda):
-const TFunction<void()> NonStaticFunctionReference = [WeakThis = TWeakObjectPtr<AMyClass>(this)]()
-{
-	if(WeakThis.IsValid())
-	{
-		WeakThis->MyNonStaticFunction();
-	}
-};
 
-// Assigning a lambda function:
-const TFunction<void()> LambdaFunction= [](){};
-
-// Examples of invoking TFunction<>:
-StaticFunctionReference();
-
-const TFunction<void()>& SelectedFunction = FMath::RandBool() ? NonStaticFunctionReference : LambdaFunction;
-SelectedFunction();
-
-(FMath::RandBool() ? NonStaticFunctionReference : LambdaFunction).operator()();
-
-// Using TFunction<> type as an argument in a function prototype:
-void MyFunction(TFunction<bool(int32, int32)> Argument);
-```

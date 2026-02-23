@@ -72,27 +72,42 @@ bool UGameplayAbility::IsPredictingClient()
 
 > :books: `FGameplayAbilitySpec` 可看作是一个 **"允许使用某 `UGameplayAbility` 的许可证"**
 
+- Created Only on Authority 
+  - 对于 DS 模式, 只有 Server 能够**创建** `FGameplayAbilitySpec` 和 `FGameplayAbilitySpecHandle`, 并将其**授予**  ASC, Clients only get replicated, even for *LocalOnly-Type* GA
+
 ##### 类关系:
-- Refers to the `UGA`'s CDO by default
-- :pushpin: Can hold refers to **1-N `UGA` instances** (if use instanced GA)
-- 配合句柄: `FGameplayAbilitySpecHandle` 
+- Has an reference to the `UGameplayAbility`'s CDO 
+- Can hold references to **1-N `UGA` instances** (if use instanced GA)
+- 配合用句柄: `FGameplayAbilitySpecHandle` 
+- 
 ##### 主要属性:
 
-`FGameplayAbilitySpecHandle Handle` // 作为唯一ID
+`FGameplayAbilitySpecHandle Handle` // 这里作为 Unique ID 使用
 
 `TObjectPtr<UGameplayAbility> Ability` // 指向 **`UGA`'s CDO**
 
-`uint8 ActiveCount` // UPROPERTY(NotReplicated)
+`uint8 ActiveCount`  
+- UPROPERTY(NotReplicated)
 - 当前激活的 `UGA` instance 数量
 
-`TArray<TObjectPtr<UGameplayAbility>> NonReplicatedInstances` // UPROPERTY(NotReplicated)
+`TArray<TObjectPtr<UGameplayAbility>> NonReplicatedInstances` 
 `TArray<TObjectPtr<UGameplayAbility>> ReplicatedInstances` 
 - **Instanced GA 专属,** 对于 *InstancedPerActor* GA, 队列数量为1
-- Any single `UGA instance` will reside in **either of them**, 取决于 `UGA::ReplicationPolicy `
+- Any `UGA` instance will reside in **either of them**, 取决于 `UGA::ReplicationPolicy `
 
+**`TWeakObjectPtr<UObject> SourceObject`** :star:
+- 官方定义: Object this ability was created from, can be an actor or static object
+- 可选择设置该属性以关联 GA 和 外部 obj, 例如:
+    ```cpp
+    ULyraEquipmentInstance* ULyraGameplayAbility_FromEquipment::GetAssociatedEquipment() const {
+      if (FGameplayAbilitySpec* Spec = UGameplayAbility::GetCurrentAbilitySpec()) {
+        return Cast<ULyraEquipmentInstance>(Spec->SourceObject.Get());
+      }
+      return nullptr;
+    }
+    ```
 
-`TMap<FGameplayTag, float> SetByCallerTagMagnitudes`
-- todo...
+##### 其它属性:
 
 ```cpp
 int Level; // 可指定等级
@@ -101,11 +116,6 @@ int InputID; // 可绑定输入
 UPROPERTY(NotReplicated)
 FGameplayAbilityActivationInfo	ActivationInfo; //详见 FGameplayAbilityActivationInfo 部分
 ```
-
-<br>
-
-#### :mag: Created Only on Authority 
-> :books: 对于 ds 模式, 只有 Server 能够**创建** `FGameplayAbilitySpec` 和 `FGameplayAbilitySpecHandle`, 并将其**授予** some ASC, Clients only get replicated, 即便是 *LocalOnly* 型GA
 
 ---
 

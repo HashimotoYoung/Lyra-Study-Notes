@@ -1,7 +1,7 @@
 ### FAQ:
 *1. UDataAsset 和 UPrimaryDataAsset 的不同之处?*
 
-- UPrimaryDataAsset 是 UDataAsset的子集 [Link](#primary-asset-对比-secondary-asset)
+- UPrimaryDataAsset 是 UDataAsset的[子集](#primary-asset-对比-secondary-asset)
 
 ---
 
@@ -33,8 +33,6 @@ Package: /Game/Weapons/Sword.uasset
 ---
 
 # AssetManager
-
-[相关API](./SourceCode/USC_Resources.md#assetmanager)
 
 The Asset management system in Unreal breaks all Assets into two types, **Primary Assets** and **Secondary Assets**. Primary Assets can be manipulated directly by the Asset Manager from their **Primary Asset ID**, which is obtained by calling the function `GetPrimaryAssetId`. 
 

@@ -58,10 +58,10 @@ Camera系统中的**导演Actor**, created and **owned** by `APlayerController`
 ## Camera 主要流程
 
 ### Update PCM 流
-`PlayerCameraManager` 的核心 Tick 流程, 负责计算更新 **`ViewTarget.POV`** for 玩家相机
+> `PlayerCameraManager` 的核心 Tick 流程, 负责计算更新 **`ViewTarget.POV`** for Player Camera
 
-**Start with** `APlayerController::UpdateCameraManager(float delta)`
-=> `APlayerCameraManager::UpdateCamera(float delta)`
+
+:pencil2: **Start** with `APlayerController::UpdateCameraManager(float delta)`
 
 1: 如果 `IsLocalPlayer || !bUseClientSideCameraUpdates` 则进行 Camera 更新
 - 生成 NewPOV: `FMinimalViewInfo NewPOV = ViewTarget.POV;`

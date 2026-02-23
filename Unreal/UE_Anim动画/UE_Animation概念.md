@@ -1,12 +1,9 @@
-
-https://www.stevestreeting.com/2024/05/30/playing-animation-montages-in-multiplayer-games/
-
 # Unreal 动画基础
 
----
+<br>
 
 #### 线路输出示意图:
-![AnimLine](../../_img/AnimLine.png)
+![AnimLine](../_img/AnimLine.png)
 
 ---
 

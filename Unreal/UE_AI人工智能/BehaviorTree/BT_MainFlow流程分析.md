@@ -23,5 +23,5 @@ In Unreal Engine Behavior Trees, the tree **does not always execute from the roo
 行为树本身可以**自定义 tick internal**, 每次tick时bt会从root点 (也可能是某个composite点)开始evaluate. 
 - 当一个TaskNode处于running时, 该node会由UBehaviorComponent负责驱动来 **tick every frame**
 
----
+
 

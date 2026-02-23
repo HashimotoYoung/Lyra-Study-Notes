@@ -1,9 +1,6 @@
-
-https://zzjw.cc/post/btree/
-
 # 行为树结点介绍
 #### UBTNode 类架构:
-- `class UBTNode:UObject`
+- `UBTNode : UObject`
   - **`UBTCompositeNode`** :pushpin:
   - **`UBTTaskNode`** :pushpin:
     - `UBTTask_Wait` ...
@@ -11,7 +8,6 @@ https://zzjw.cc/post/btree/
     - **`UBTDecorator`** :pushpin:
     - **`UBTService`** :pushpin:
 
-<br>
 
 ## Composite `UBTCompositeNode`
 例如 selector, sequencer

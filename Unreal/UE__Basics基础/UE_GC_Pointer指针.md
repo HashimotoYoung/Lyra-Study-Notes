@@ -1,15 +1,11 @@
-
-https://zhuanlan.zhihu.com/p/427613791
-
 # UE Garbage Collector
 Unreal's GC **Only Cares About UObjects**
 
 - Only member-variables marked with **`UPROPERTY()`** are under GC Tracking
 
-- **For Actors, the GC does not destroy them immediately**, 
-Instead, actors are marked for deletion when they are no longer referenced or explicitly destroyed via methods like `Destroy()`
+- **For Actors, the GC does not destroy them immediately**. Instead, actors are marked for deletion when they are no longer referenced or explicitly destroyed via methods like `Destroy()`
   - 这是一个 Design choice for fully clean up
-<br>
+
 
 ## GC 执行流程
 基础原则: the GC primarily cares about the **Reachability** of UObject instances
