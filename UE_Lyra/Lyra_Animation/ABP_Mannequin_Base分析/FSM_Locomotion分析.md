@@ -1,4 +1,4 @@
-# 主Locomotion SM 分析
+# FSM Locomotion 分析
 
 ## 1. 基础移动 Graph
 
@@ -7,7 +7,7 @@
 ---
 
 ### 1.1 Idle 状态
-[Layer : FullBody_IdleState](../ABP_ItemAnimLayerBase%20分析/FullBody_IdleState实现.md)
+[Layer : FullBody_IdleState](../ABP_ItemAnimLayerBase分析/FullBody_IdleState实现.md)
 ##### 相关属性:
 - `TurnYawCurveValue`
   `RootYawOffsetMode`
