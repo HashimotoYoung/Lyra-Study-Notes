@@ -1,8 +1,10 @@
-# Animation Tick 流程
+`UAnimInstance::ParallelEvaluateAnimation()` when called ??
 
-?? `UAnimInstance::ParallelEvaluteAnimation()` when called
-?? 属性或get方法能变成propertyaccess的条件
-?? 了解 fastPath and warnaboutblueprint..设置(在animbp的classsetting中)
+使用 propertyaccess 的条件 ??
+
+了解 fastPath and warnaboutblueprint..设置(在animbp的classsetting中) ??
+
+# Animation Tick 流程
 
 ### 前提知识点:
 -  一般情况下 `UAnimInstance (UObject)` 的 **Outer** 为 `USkeletalMeshComponent`
@@ -38,7 +40,7 @@
     - `NativeUpdateAnimation()` 
       `BlueprintUpdateAnimation()` 
       // 以上两个方法分别对应c++和蓝图, 更新逻辑状态
-      `if (bShouldImmediatelUpdate==true)`
+      `if (bShouldImmediatelyUpdate==true)`
         - todo........
 
 
@@ -61,7 +63,7 @@
 <br>
 
 #### EvaluationTask 流 (在WorkerThread)
-DoTask()中, 获取SkelMeshComp的引用, 执行并行Evalute逻辑:
+DoTask()中, 获取SkelMeshComp的引用, 执行并行Evaluate逻辑:
 - `USkeletalMeshComponent::ParallelAnimationEvaluation()`
     - `UAnimInstance::ParallelUpdateAnimation()`
         - :star:`GetProxyOnAnyThread<FAnimInstanceProxy>().UpdateAnimation();`
@@ -74,7 +76,7 @@ DoTask()中, 获取SkelMeshComp的引用, 执行Complete逻辑:
 - `USkeletalMeshComponent::CompleteParallelAnimationEvaluation()`
     - **安全释放** Evaluation Task 
     - `SwapEvaluationContextBuffers()`
-      // Evalute阶段结束 **返还Skele数据** Context => SkelComp
+      // Evaluate阶段结束 **返还Skele数据** Context => SkelComp
     - :star:**`PostAnimEvaluation()`** 开始PostAnimEvaluate流程
         - `UAnimInstance::PostUpdateAnimation()`
             - `GetProxyOnGameThread<FAnimInstanceProxy>().PostUpdate()`

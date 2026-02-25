@@ -2,18 +2,18 @@
 
 > :books: 基于 Message Bus Pattern 的游戏内消息系统
 
-#### Features:
+
 - **基于 TAG:** 使用 `FGameplayTag` 作为 "Message Channel"
   - 支持 TAG 层级特性, 允许 Listener 监听例如 `Message.UI` 并接收所有 `Message.UI.XXX` 消息
 - 通过使用 C++ Template, 支持发送 **Specific-Type** Payload without knowing what type it is
-- **类型安全检查:** 当广播消息时, `GameplayMessageSubsystem` 会**比较 Senders Payload Type 与 Listeners Registered Paylod Type**. 如果类型不匹配，会自动跳过
+- **类型安全检查:** 当广播消息时, `GameplayMessageSubsystem` 会**比较 Senders Payload Type 与 Listeners Registered Payload Type**. 如果类型不匹配，会自动跳过
 - **完全同步:** 当调用 `BroadcastMessage()` 时，System 会立即遍历 `ListenerMap` 并依次回调
 
 
 ---
 ### UGameplayMessageSubsystem : UGameInstanceSubsystem
 
-中枢管理类, 通过插件添加
+Manager 类, 由插件提供
 
 ##### 主要属性:
 `TMap<FGameplayTag, FChannelListenerList> ListenerMap`
@@ -21,7 +21,7 @@
 
 ##### 主要方法:
 #### `RegisterListener()` (General)
-- :star: **Thunk with `void*`:** 将 `TFunction<void(FGameplayTag, const FMessageStructType&)>` 类型回调, 封装为通用类型 `TFunction<void(FGameplayTag, const UScriptStruct*, const void*)` 回调以便于缓存 
+- :star: **Thunk with `void*`:** 将 `TFunction<void(FGameplayTag, const FMessageStructType&)>` 类型回调, **封装为通用类型回调:** `TFunction<void(FGameplayTag, const UScriptStruct*, const void*)`, 以便于缓存 
   - 回调时会执行 TypeCast
 - dereference the `FMessageStructType*` and pass to `const FMessageStructType&`
 ```cpp

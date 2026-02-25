@@ -1,6 +1,6 @@
 # UE Camera
 
-## Camera 核心类介绍
+## Camera 核心类:
 
 ### PlayerCameraManager : AActor
 
@@ -51,7 +51,7 @@ Camera系统中的**导演Actor**, created and **owned** by `APlayerController`
 - One actor can have mutiple `UCameraComponents`
 - Contains 摄像机相关属性 (Location/Rotation; FOV; ProjectionMode等)
 
-详见 `ULyraCameraComponent`
+> 可参考 `ULyraCameraComponent`
  
 ---
 
@@ -80,7 +80,8 @@ Camera系统中的**导演Actor**, created and **owned** by `APlayerController`
          `UCameraComponent::GetCameraView(float DeltaTime, FMinimalViewInfo& DesiredView)`
 - 再次赋值: `NewPOV = ViewTarget.POV;`
 
-2: 缓存当前帧的计算结果 `this->FillCameraCache(NewPOV)` 
+2: 缓存当前帧的计算结果 `this->FillCameraCache(NewPOV)`
+
 3: 通知 Server 更新结果
 // todo...
 

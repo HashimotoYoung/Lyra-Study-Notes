@@ -57,7 +57,7 @@ void HandleDeferredGameplayCues(const FActiveGameplayEffectsContainer* GameplayE
 `FGameplayCueObjectLibrary RuntimeGameplayCueObjectLibrary` UPROPERTY(transient)
 - 管理运行时GC相关资源 
 
-`TArray<FGameplayCuePendingExecute> PendingExecuteCues` UPROPERTY(transient)
+`TArray<FGameplayCuePendingExecute> PendingExecuteCues` UPROPERTY(transient)  
 `int32 GameplayCueSendContextCount` UPROPERTY(transient)
 - [Execute GC 流](#execute-gc-流) 相关属性
 
@@ -71,13 +71,13 @@ void HandleDeferredGameplayCues(const FActiveGameplayEffectsContainer* GameplayE
 
 ---
 ### UGameplayCueSet : UDataAsset
-GCN 的 Container 类, 同时提供 HandlGC 流程中的核心APIs
+GCN 的 Container 类, 定义了 Handle GC 流程中的核心APIs
 ##### 类关系:
 - Contained as `UGamplayCueManager.RuntimeGameplayCueObjectLibrary.CueSet`
 
 ##### 主要属性:
 
-`TArray<FGameplayCueNotifyData> GameplayCueData` 
+`TArray<FGameplayCueNotifyData> GameplayCueData`   
 `TMap<FGameplayTag, int32> GameplayCueDataMap` 
 
 - GameplayCueData 包含了所有GCN的相关数据信息; 
@@ -105,8 +105,6 @@ GCN 的 Container 类, 同时提供 HandlGC 流程中的核心APIs
 [Handle GC 流](#handle-gc-流) 的必经API
 
 ---
-
-
 
 ### GCN Classes 
 

@@ -3,7 +3,6 @@ https://rawsourcecode.io/posts/unreal-delegates-under-the-hood
 
 # UE Delegate
 
-
 ### Standard Delegates (标准委托) 
 - 不支持蓝图
 - 可绑定 Lambda
@@ -19,7 +18,7 @@ DECLARE_DELEGATE_OneParam(FOnScoreChangedSignature, int32 /* NewScore */);
 // BindUObject requires that the target be a UObject
 OnScoreChangedDelegate.BindUObject(this, &ThisClass::OnScoreChanged);
 // BindRaw is for if the target is not a UObject
-OnScoreChangedDelegate.BindRaw(SomeSlateThing, &SSlomeSlateThing::OnScoreChangedRaw);
+OnScoreChangedDelegate.BindRaw(SomeSlateThing, &SSomeSlateThing::OnScoreChangedRaw);
 // BindLambda is useful for simpler anonymous functions
 OnScoreChangedDelegate.BindLambda([](int32 NewScore)
 {
@@ -32,7 +31,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnScoreChangedSignature, int32 /* NewScore 
 // AddUObject requires that the target be a UObject
 OnScoreChangedDelegate.AddUObject(this, &ThisClass::OnScoreChanged);
 // AddRaw is for if the target is not a UObject
-OnScoreChangedDelegate.AddRaw(SomeSlateThing, &SSlomeSlateThing::OnScoreChangedRaw);
+OnScoreChangedDelegate.AddRaw(SomeSlateThing, &SSomeSlateThing::OnScoreChangedRaw);
 // AddLambda is useful for simpler anonymous functions
 OnScoreChangedDelegate.AddLambda([](int32 NewScore)
 {

@@ -7,20 +7,29 @@
 ##### 相关属性:
 
 - `StrideWarpingCycleAlpha`: StrideWarping的Cycle值
+
   `HipFireUpperBodyOverrideWeight`
+
   `Vec PlayRateClampCycle` **有默认值**
-- `Enum MainBP.LocalVelocityDirectionNoOffset` *NoOffset版本*  
+
+- `Enum MainBP.LocalVelocityDirectionNoOffset` *NoOffset版本*
+
   `MainBP.LocalVelocityDirectionAngle` *NoOffset版本* 
+
   `MainBP.DisplacementSpeed` 
+
   `MainBP.GameplayTag_IsADS` 
+  
   `MainBP.IsCrouching` 
 
 ##### 相关Anim序列:
 - `Jog_Cardinals` 四方向
+
   `Walk_Cardinals` 同上
+
   `Crouch_Walk_Cardinals` 同上
 
-#### 主节点 `SequencePlayer` 更新时:
+#### 主节点 `Seq Player` 更新时:
 - 使用 **`MainBP.DisplacementSpeed`** 更新cycle动画速率
 
 ![UpdateCycleAnim1](../../_img/UpdateCycleAnim1.png)

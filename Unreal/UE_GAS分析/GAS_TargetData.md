@@ -44,7 +44,7 @@ FGameplayAbilityTargetDataHandle LocalTargetDataHandle(MoveTemp(const_cast<FGame
   - Value: `FAbilityReplicatedDataCache`
 
 
-####  AbilityTargetDataMap 相关方法
+####  相关方法
 
 > :memo: 以 Lyra 射击流程为例, Server 选择相信 Client 收集的Target
 ##### 1. 注册 Set Delegate 回调

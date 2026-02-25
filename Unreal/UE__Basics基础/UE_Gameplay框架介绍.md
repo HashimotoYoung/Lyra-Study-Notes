@@ -1,10 +1,10 @@
 # Unreal Gameplay 框架介绍
+
 ### 类关系图
-Game Instance:
 
 PlayerController 关系:
 - Spawn并且Owns `PlayerState`
-  // **optional** 对于 AIController 
+  // optional for AIController 
 - Spawn并且Owns `PlayerCameraManager`
 - Spawn并且Owns `AHUD`
 - Possess `Pawn`
@@ -22,7 +22,7 @@ PlayerController 关系:
 
 ## GameMode
 - **Lifecycle:** 随`UWorld`
-- The `GameMode` instance exists **only on the server** in a  mutiplayer game
+- The `GameMode` instance exists **only on the server** in a  multiplayer game
 - Only one `GameMode` may be in use **at any given time**
 - GameMode is the **first actor** to instantiate upon level load. Upon creation, it instantiates the remaining framework actors, **the first two** are `GameState` and `PlayerState`.
 <br>
@@ -33,7 +33,7 @@ The `GameState` should manage **information that is meant to be known to all con
 
 Think of the `GameState` as the "**Replicated Snapshot of the Current Game's State."**
 
-- **Lifecycle:** 随`Uworld`
+- **Lifecycle:** 随`UWorld`
 - **Replicated to All Clients:** A single `GameState` instance exists on the server, and copies of it are replicated to **every connected client**.
 - 使用时需要考虑哪些Property应该放在GameState,哪些放在PlayerState
 

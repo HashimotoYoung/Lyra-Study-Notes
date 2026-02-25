@@ -22,7 +22,8 @@
 
 ### 设计思路: "集中初始化" 
 
-IniStates System 的设计模式有些类似于 *Mediator Pattern*, 在初始化流程中 Classes 之间不再相互依赖, 而是统一交互/监听 Feature's InitState. **当 Feature 推进到新的 State 时, 意味着部分数据已经初始化完成**, 进而会 Broadcast "状态变换", 让 Listeners 可以安全获取这些数据
+IniStates System 的设计模式有些类似于 *Mediator Pattern*, 在初始化流程中 Classes 之间不再相互依赖, 而是统一交互/监听 Feature's InitState.   
+**当 Feature 推进到新的 State 时, 意味着部分数据已经初始化完成**, 进而会 Broadcast "状态变换", 让 Listeners 可以安全获取这些数据
 
 - **设计目的:** 解决 *dependency-ordered* initialization 问题, 弥补 `BeginPlay` 本身不可靠的初始化顺序. 
 - **底层实现:** 本质上是**以 Actor 为颗粒度**, 给 Registered Actors 的 **Each Feature** 提供一套单向状态机
@@ -75,7 +76,9 @@ IniStates System 的设计模式有些类似于 *Mediator Pattern*, 在初始化
 ##### 主要方法:
 
 #### `ProcessFeatureStateChange(AActor* Actor, const FActorFeatureState* StateChange)`
+
 在某 Actor 的某 Feature 成功推进 State 后执行, 通知回调
+
 - `IGameFrameworkInitStateInterface` 定义了 Bind 和 Callback 相关 API
 - :bulb: 因为在回调执行过程中有可能会再次推进 State, 这里使用 **"Breadth-First"** 方式回调 , 值得参考
 ```cpp
@@ -123,6 +126,7 @@ void UGameFrameworkComponentManager::ProcessFeatureStateChange(AActor* Actor, co
 ### Init Lyra Character 流
 
 :pencil2: **Start**
+
 1: `LyraGameInstance` 在初始化时向 GFCM 注册一条 **自定义 InitState 链**
 - *"Spawned"* => *"DataAvailable"* => *"DataInitialized"* => *"GameplayReady"*
 - :warning: 不同 Feature 可共用同一种 InitState 链
@@ -140,7 +144,7 @@ void UGameFrameworkComponentManager::ProcessFeatureStateChange(AActor* Actor, co
 
 4: 当外部初始化相关数据更新后, 会主动调用 `CheckDefaultInitialization()` 方法, 推进 Feature's InitState 直到变成 "GameplayReady"
 
-<br>
+---
 
 #### Actors Features 之间的依赖关系示例 :star: 
 - 这里 `ULyraHeroComponent` 会在确认 "OwnerPawn's PawnExtension Feature" 达到 *InitState_DataInitialized* 后才会允许推进自身的 Feature's InitState

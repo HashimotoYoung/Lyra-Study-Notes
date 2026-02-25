@@ -3,7 +3,7 @@
 ---
 ## 1. GE Modifiers (属性修改器)
 
-:books: GE 通过使用 Modifiers(Mods) 来实现 **Modify Attribute** 的功能, mods define the rules **how** an attribute should be changed.
+> :books: GE 通过使用 Modifiers(Mods) 来实现 **Modify Attribute** 的功能, mods define the rules **how** an attribute should be changed.
 
 - 一个 GE 可配有 0-N 个 Mods; One Mod 允许修改 **Exactly One** Attribute 
 - 支持 Prediction 
@@ -60,7 +60,7 @@ Modifier 的配置类, 无任何成员方法
 > :memo: "The **Current Value** of an attribute is the **Base Value** evaluated through the attribute’s FAggregator, which **aggregates all modifiers from Active GEs** on the ASC."
 
 #### 生命周期:
-- :pushpin: When Created: 当 Apply **Duration-based && No Peroid** 型GE
+- :pushpin: When Created: 当 Apply **Duration-based && No Period** 型GE
 - Who Contains: 由 `FActiveGameplayEffectsContainer` 负责创建, 持有和管理
   - 也可以认为 Aggregtors are Owned by ASC
   - Aggregator 是基于 Attribute 存在的计算节点 ( Exists **per-attribute-per-ASC** ) 
@@ -119,7 +119,7 @@ FOnAggregatorDirty OnDirtyRecursive // Delegate
   2. 找到 **依赖于 ChangedAgg 的 Modifier, 并执行 re-evaluation**
   3. :pushpin: 重新评估会进而造成 ModDef.Attribute 的 Aggregator "Get Dirty", 会再次触发 `BroadcastOnDirty()`, 形成**链式传播**
 
-#### `Others:`
+##### 其他方法：
 
 ```cpp
 // 添加/删除/更新 Mod, 执行后会立即调用 BroadcastOnDirty()

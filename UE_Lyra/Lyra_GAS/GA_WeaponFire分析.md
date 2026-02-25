@@ -4,7 +4,7 @@
 
 远程射击 GA 
 
-- 继承自 `ULyraGameplayAbility_FromEquipment` <= `ULyraGameplayAbility` 
+- 继承自 `ULyraGameplayAbility_FromEquipment` << `ULyraGameplayAbility` 
 
 ##### 主要属性:
 
@@ -24,16 +24,16 @@ TSubclassOf<ULyraCameraMode> ActiveCameraMode;
 
 ### `StartRangedWeaponTargeting()`
 
-启动本地瞄准射击流程; ClientOnly
+启动本地瞄准射击流程; Client Only
 
 一个 `FGameplayAbilityTargetDataHandle` 对应一个持有相同ID的 `FLyraServerSideHitMarkerBatch`
+
 在一次射击流程中, FoundHits 的**数量**和 `FLyraGameplayAbilityTargetData_SingleTargetHit`的**数量**和 HitMarkers的**数量**一致
 
 - 获取武器状态组件: `let wsComp = ULyraWeaponStateComponent()`
-- :warning: 创建**Server预测窗**: 	`FScopedPredictionWindow ScopedPrediction(MyAbilityComponent, CurrentActivationInfo.GetActivationPredictionKey());`
-  // 本方法没有在Server调用, 这里没有实际意义?
+- 创建**预测窗**: 	`FScopedPredictionWindow ScopedPrediction(MyAbilityComponent, CurrentActivationInfo.GetActivationPredictionKey());`
 - 执行[本地瞄准判断](#performlocaltargetingout-tarrayfhitresult-outhits), 计算出**本地击中结果 FoundHits** (`TArray<FHitResult>`)
-- :star: 根据 FoundHits, 填充 **`FGameplayAbilityTargetDataHandle`** 数据 
+- :pushpin: 根据 FoundHits, 填充 **`FGameplayAbilityTargetDataHandle`** 数据 
   - **巧妙设置UniqueID:** 以待确认批次Count作为 TargetData.UniqueId
   - **避免内存泄漏:** 在Heap上New出TargetHit对象后, 立刻用 Handle来Hold住
 
@@ -57,10 +57,12 @@ TSubclassOf<ULyraCameraMode> ActiveCameraMode;
    }
    ```
 - **if** 当前武器是非Projectile类型: CALL `WeaponStateComponent->AddUnconfirmedServerSideHitMarkers(InTargetData, FoundHits)` 
+  
   :memo: **方法简介:**  
   - 基于 TargetData.UniqueId, 新建一个 **"待确认HitMarker批次"**
-    //`FLyraServerSideHitMarkerBatch& NewUnconfirmedHitMarker = UnconfirmedServerSideHitMarkers.Emplace_GetRef(InTargetData.UniqueId);`
-  - :star: 根据 FoundHits, 填充 HitMarkers 数据
+    
+    - `FLyraServerSideHitMarkerBatch& NewUnconfirmedHitMarker = UnconfirmedServerSideHitMarkers.Emplace_GetRef(InTargetData.UniqueId);`
+  - :pushpin: 根据 FoundHits, 填充 HitMarkers 数据
   - 添加到`WeaponStateComponent::UnconfirmedServerSideHitMarkers`队列中, 等待服务端回调进行确认
 
 - **开始进行本地预测:** [OnTargetDataReadyCallback()](#ontargetdatareadycallbackconst-fgameplayabilitytargetdatahandle-indata-fgameplaytag-applicationtag)
@@ -68,13 +70,13 @@ TSubclassOf<ULyraCameraMode> ActiveCameraMode;
 ---
 
 ### `PerformLocalTargeting(OUT TArray<FHitResult>& OutHits)`
-本地瞄准判断, 输出FHitResult
+本地瞄准判断, 输出 `FHitResult`
 
 ---
 
 ### `OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& InData, FGameplayTag ApplicationTag)`
-接收射击目标回调; BothSide
-- **if** 成功获取 AbilitySpec <= `CurrentSpecHandle`
+接收射击目标回调; Called on Both
+- **if** Get `AbilitySpec` from `CurrentSpecHandle`
   - 新建 Client 预测窗, 生成 预测Key  **P1**
   - :star: **MoveTemp** `InData` 到 Local 的原因:
     1. 接管Ownership, 下方代码执行时, 数据有效

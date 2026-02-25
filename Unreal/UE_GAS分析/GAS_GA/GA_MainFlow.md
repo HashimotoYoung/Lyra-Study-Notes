@@ -10,7 +10,7 @@
 public FGameplayAbilitySpecHandle ASC::GiveAbility(const FGameplayAbilitySpec& Spec)
 protected virtual void ASC::OnGiveAbility(FGameplayAbilitySpec& Spec)
 ```
-:pencil2: **Start** 
+:pencil2: **Start**   
 1: 实例化 `GA Spec`
 
 - 获取 `UGameplayAbility`'s CDO 并**构造** `GA Spec`
@@ -19,8 +19,8 @@ protected virtual void ASC::OnGiveAbility(FGameplayAbilitySpec& Spec)
 - **if** *Not Authority*, **return (中断流程)**
 - 加锁 `ABILITYLIST_SCOPE_LOCK()`
 - 添加 `Spec` 到 `ASC::ActivatableAbilities`
-  - `FGameplayAbilitySpec& OwnedSpec = ActivatableAbilities.Items[ActivatableAbilities.Items.Add(Spec)]`
-    :warning: Add 时会进行拷贝, 因此这里 OwnedSpec != Spec
+  - `FGameplayAbilitySpec& OwnedSpec = ActivatableAbilities.Items[ActivatableAbilities.Items.Add(Spec)]`  
+    // :warning: Add 时会进行拷贝, 因此这里 OwnedSpec != Spec
 
 3: **if** GA is *InstancedPerActor*, **创建 a new instance** of  `UGameplayAbility` 
 - **if** GA is *ReplicateYes*
@@ -45,7 +45,7 @@ protected virtual void ASC::OnGiveAbility(FGameplayAbilitySpec& Spec)
 bool UAbilitySystemComponent::TryActivateAbility(FGameplayAbilitySpecHandle AbilityToActivate, bool bAllowRemoteActivation)
 bool UAbilitySystemComponent::InternalTryActivateAbility(FGameplayAbilitySpecHandle Handle, FPredictionKey InPredictionKey, UGameplayAbility** OutInstancedAbility, FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 ```
-:pencil2: **Start**
+:pencil2: **Start**  
 1: 执行 Activate 的基础条件判断
 
 - ASC's `OwnerActor 和 AvatarActor` are both Valid 
@@ -106,7 +106,7 @@ bool UAbilitySystemComponent::InternalTryActivateAbility(FGameplayAbilitySpecHan
 ```cpp
 void UAbilitySystemComponent::InternalServerTryActivateAbility(FGameplayAbilitySpecHandle Handle, bool InputPressed, const FPredictionKey& PredictionKey, const FGameplayEventData* TriggerEventData)
 ```
-:pencil2: **Start**
+:pencil2: **Start**  
 1: 基础检测 
  - check `Spec != null`, `GetNetSecurityPolicy`...
  - **if** any False, [RPC] 告知 Client 激活失败  
@@ -131,7 +131,7 @@ void UAbilitySystemComponent::InternalServerTryActivateAbility(FGameplayAbilityS
 ```cpp
 protected void UGameplayAbility::CallActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 ```
-:pencil2: **Start**
+:pencil2: **Start**  
 1: Pre Activate 处理
 - FlushServerMoves ? (todo...)
 - 初始化 Current Info 
@@ -167,8 +167,7 @@ void UAbilitySystemComponent::NotifyAbilityEnded(FGameplayAbilitySpecHandle Hand
 // 相关属性
 ASC::ActivatableAbilities
 ```
-:pencil2: **Start**
-
+:pencil2: **Start**  
 1: [GA层] 先检测 End 流程能否正常执行, 用于防止被多次调用的情况 
 - `Owner ASC != null && Spec->IsActive()...`
 
@@ -216,7 +215,7 @@ ASC::ActivatableAbilities
 ```cpp
 void UAbilitySystemComponent::ClientActivateAbilitySucceedWithEventData_Implementation(FGameplayAbilitySpecHandle Handle, FPredictionKey PredictionKey, FGameplayEventData TriggerEventData)
 ```
-:pencil2: **Start**
+:pencil2: **Start**  
 1: 尝试获取 GA Spec from Handle 
 - **if** Spec not found , 意味着 `ActivatableAbilities` 尚未同步完成, defer handle and **return**
   - **生成并添加**一份 `FPendingAbilityInfo` 到 `PendingServerActivatedAbilities` 队列

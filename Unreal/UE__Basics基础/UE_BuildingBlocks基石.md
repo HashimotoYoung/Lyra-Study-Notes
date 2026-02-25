@@ -8,13 +8,13 @@
 
 ###### *2. `UPORPERTY()` 的作用 ?*
 
-让 UnrealEngine 能够**知道**该variable, 从而加入Reflection系统；
+- 让 UnrealEngine 能够**知道**该variable, 从而加入Reflection系统；
 Make it can be **serialized, replicated, edited in the editor**, etc.
 <br>
 
 ###### *3. GetTransientPackage()的作用 ?*
 
-该方法会返回 **Transient** Package, which is a special **global UPackage object** in Unreal Engine, it acts as a **"dummy" ROOT outer** for temporary objects.
+- 该方法会返回 **Transient** Package, which is a special **global UPackage object** in Unreal Engine, it acts as a **"dummy" ROOT outer** for temporary objects.
 
 主要用于生成 temporary UObject , like dynamic materials, runtime textures, temporary components
 
@@ -79,16 +79,17 @@ Not:
 
 ## UObject 
 
-**大部分情况下**, 新建的 Class 应该去继承 `UObject`或 `USTRUCT`, 原因如下:
+**大部分情况下**, 新建的 Class 应该去继承 `UObject`或 `USTRUCT`, 原因:
 
 1. Supports [Garbage Collection](./UE_GC_Pointer指针.md#ue-garbage-collector)
 2. Serialization/Deserialization supported
-3. :star: Networking/Replication: Unreal 的 **built-in replication** is **based on metadata**, which comes from unreal's **reflection system**, 而只有`UObject`和`USTRUCT`支持反射
+3. :star: Networking/Replication: Unreal 的 **built-in replication** is **based on metadata**, which comes from unreal's **reflection system**, 而只有 `UObject` 和 `USTRUCT` 支持反射
 4. Blueprint Integration
 5. Editor Integration: 例如编辑默认值
 6. **Class/Object Instantiation and Management:** The engine has robust systems for creating, finding, and managing UObjects. 内部支持比较完善
 
 #### 核心方法:
+
 #### `NewObject<T>() / NewObject<T>(UObject* Outer)`
 
 - 每个UObject都会有一个**Outer**,当传空时会调用`Outer=GetTransientPackage()`
@@ -108,7 +109,7 @@ Not:
 
 # Class Default Object
 
-一句话总结: CDO is effectively a **singleton** for each `UClass` that has all the **default values**  in it. It serves as an template for the class instances
+> :books: CDO is effectively a **singleton** for each `UClass` that has all the **default values**  in it. It serves as an template for the class instances
 
 - **基于UObject:** The CDO mechanic only exists for **`UObject Subclasses`**
 - **创建时机:** 在所属Module被loaded时创建 (一般是 **PreInit** 阶段)
@@ -149,7 +150,7 @@ void MyClass:ReadCDO(){
 
 # UWorld
 
-`UWorld` 包含所有Actors, it includes not just the visual geometry but also the game logic, physics simulation, audio, lighting...
+- 包含所有 Actors, it includes not just the visual geometry but also the game logic, physics simulation, audio, lighting...
 
 - 当调用 `OpenLevel()` or `ServerTravel()`时:
   - :star: The old `UWorld` is destroyed and a new `UWorld` is created 
@@ -161,7 +162,7 @@ void MyClass:ReadCDO(){
 
 ### Classes who "Live" on the UWorld 
 
-Aside from `ULevel`, many **classes instance's lifetime** are closely tied to `UWorld` instance, include:
+Aside from `ULevel`, many **classes obj's lifetime** are closely tied to `UWorld` instance, include:
 
 1. No `Actors` would survive without `UWorld`
 2. **`PlayerController`**
@@ -175,33 +176,26 @@ Aside from `ULevel`, many **classes instance's lifetime** are closely tied to `U
 **1. Loading from a Main Menu to a Game Level:**
 ```
 When you start the game, an initial UWorld for your main menu map is created.
-
 When the player clicks "Start Game," you call OpenLevel().
-
 //The engine then tears down the existing UWorld (and all its Actors, GameMode, GameState, etc.) for the main menu.
-
 A brand new UWorld is created for your gameplay level.
 ```
 
 **2. Transitioning Between Levels in a Game:**
 ```
 When a player completes Level 1 and moves to Level 2, you again call OpenLevel().
-
 The `UWorld` for Level 1 is destroyed.
-
 A new `UWorld` for Level 2 is created.
 ```
 **3. Returning to Main Menu:**
 ```
 After a game match, when players return to the main menu, `OpenLevel()` is called for the main menu map.
-
 The `UWorld` for the game match is destroyed.
-
 A new `UWorld` for the main menu is created.
 ```
 <br>
 
-#### UWorld 的设计理念
+#### UWorld 的设计理念:
 
 - :star: **Clean State:** Each `UWorld` represents a ***Distinct Simulation Environment***. Destroying and recreating it ensures a clean slate, removing all previous Actors, components, and state from the old level. This prevents memory leaks, dangling pointers, and unexpected interactions from previous levels.
 

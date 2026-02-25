@@ -1,4 +1,13 @@
 # Lyra Camera 相机 
+
+:books: Lyra Camera 系统着重于**可扩展性**和**相机间平滑过渡**
+
+
+- 交由 CameraModes 输出 Camera View
+- 栈式管理 CameraModes, 便于 Blend
+- 使用 Curve 资产数据驱动 offset
+- [Unreal Camera 基础介绍](../../Unreal/UE_Camera相机/UE_Camera.md)
+
 ---
 
 ### ULyraCameraMode : UObject
@@ -7,7 +16,7 @@
 
 ##### 类关系:
 - Contained by `ULyraCameraModeStack` 
-- Outer is `ULyraCameraComponent`
+- Outer = `ULyraCameraComponent`
 ##### 主要属性:
 `float BlendTime` 
 `float BlendWeight` 
@@ -51,16 +60,17 @@ virtual void UpdateBlending(float DeltaTime);
 ##### 主要属性:
 
 `FVector CurrentCrouchOffset` //每帧插值更新
+
 `float CrouchOffsetBlendPct` //蹲姿Offset融合百分比,每帧增加
+
 `TObjectPtr<const UCurveVector> TargetOffsetCurve`
 - 曲线资产引用, 用于计算相机位置
 - Lyra中对应资产为 "ThirdPersonOffsetCurve"
 <br>
 
 ##### 主要方法:
+
 #### `virtual UpdateView(float DeltaTime) override`
-
-
 
 ---
 
@@ -79,10 +89,10 @@ CameraMode Container; 负责生成并持有CameraMode, 实现 CameraMode 混合�
 
 ##### 主要方法:
 #### `EvaluateStack(float DeltaTime, FLyraCameraModeView& OutCameraModeView)` 
-Update时调用, 计算 CameraModeView
+- Update时调用, 计算 CameraModeView
 
 #### `PushCameraMode(TSubclassOf<ULyraCameraMode> CameraModeClass)` 
-ExistingStackContribution的算法值得学习
+- ExistingStackContribution的算法值得学习
 
 #### `BlendStack(FLyraCameraModeView& OutCameraModeView)`
 
@@ -104,12 +114,11 @@ ExistingStackContribution的算法值得学习
 `DetermineCameraModeDelegate : FLyraCameraModeDelegate`
 - BindTo => `TSubclassOf<ULyraCameraMode> ULyraHeroComponent::DetermineCameraMode()`
 - 通过该委托将 CameraMode 的切换权给 `LyraHeroComponent`
-<br>
 
 ##### 主要方法:
 
 #### `GetCameraView(float DeltaTime, FMinimalViewInfo& DesiredView) override` 
-见 [GetCameraView 流](#getcameraview-流)
+- 见 [GetCameraView 流](#getcameraview-流)
 
 ---
 
@@ -118,6 +127,7 @@ ExistingStackContribution的算法值得学习
 ### GetCameraView 流
 > 核心Override方法, 涵盖了每帧相机的更新逻辑 
 
+:pencil2: **Start**  
 1: 检测当前相机模式: `UpdateCameraModes()`
 - 通过委托向 `LyraHeroComponent` 请求一个 `TSubclassOf<ULyraCameraMode>` 
 - 从本地缓存中获取或创建对应的 `CameraMode` instance 
@@ -128,7 +138,7 @@ ExistingStackContribution的算法值得学习
 
 2.1: Update Stack 
 - **foreach** `cameraMode` in `this.CameraModeStack (TArray<ULyraCameraMode*>)`
-  -  执行 `cameraMode->` [UpdateCameraMode 流](#updatecameramode-流) 
+  -  执行 `cameraMode->` [Update Single Camera Mode 流](#update-single-camera-mode-流) 
   - **if** `cameraMode.BlendWeight` >= 1, **break** 
 - :pushpin: 将后续未遍历到的 CameraMode 直接从 `CameraModeStack` 中删除
 
@@ -139,21 +149,23 @@ ExistingStackContribution的算法值得学习
 - 同步 Rot 至 `PlayerController.ControlRotation` 
   - **当前相机朝向决定控制器的朝向**
 - 同步 Pos/Rot/FOV 至 `LyraCameraComponent`
-  - :pushpin: 必要步骤, 很多模块只查询 `CameraCompoent` 的 Transform
+  - :pushpin: 必要步骤, 很多模块只查询 `CameraComponent` 的 Transform
 - 填充 *DesiredView* 的各项属性
   > *DesiredView* 最终被 `PlayerCameraManager` 用于渲染 POV
 
 ---
 
-### UpdateCameraMode 流
-> 以 ULyraCameraMode_ThirdPerson 为例
+### Update Single Camera Mode 流
 
-1: **更新 *View* 中的各项属性:** `virtual UpdateView(deltaTime)`
 
-- 通过 Outer 获取 **相机Target**(`ACharacter*`), 检查是否下蹲并更新 ***CurrentCrouchOffset***
+:pencil2: **Start:**  以 `ULyraCameraMode_ThirdPerson` 为例
+
+1: 更新 *View* 中的各项属性: `virtual ULyraCameraMode::UpdateView(float DeltaTime)`
+
+- 通过 Outer(`ULyraCameraComponent`) 获取 **相机Target** (`ACharacter*`), 检查是否下蹲并更新 ***CurrentCrouchOffset***
   - `let CrouchedHeightAdjustment = CharaCDO->CrouchedEyeHeight - CharaCDO->BaseEyeHeight`
 
-(1): 获取相机基准位置和旋转
+获取相机基准位置和旋转
 
 - 获取 **PivotLocation**
   - Lyra 在这里会添加Offset, 以确保 PivotLocation **不受Capsule形变的影响** (例如下蹲)
@@ -167,7 +179,7 @@ ExistingStackContribution的算法值得学习
   - 会对 `PivotRotation.Pitch` 进行 Clamp
 - 赋值 *View* => `View.Location = PivotLocation + CurrentCrouchOffset`
 
-(2): 调整相机位置 (曲线)
+调整相机位置 (曲线)
   - :star: 读取曲线配置; **Add "Pitch-Based" Curve Offset** to *View* 
 
     ```cpp
@@ -178,7 +190,7 @@ ExistingStackContribution的算法值得学习
     }
     ```
 
-(3): 调整相机位置 (防穿透): `UpdatePreventPenetration(DeltaTime)`
+调整相机位置 (防穿透): `UpdatePreventPenetration(DeltaTime)`
 - 定义 SafeLocation = 玩家位置(`GetActorLocation()`)
 - 找出 View's AimLine 上距离 SafeLocation 最近的投影点: `ClosestPointOnLineToCapsuleCenter`
 - 再次赋值 SafeLocation = "Capsule上距离 `ClosestPointOnLineToCapsuleCenter` 最近的点"
@@ -187,3 +199,4 @@ ExistingStackContribution的算法值得学习
 - :star: 最后以该点为起始, **围绕方向 (`View.Location - SafeLocation`) 进行多次 *SphereCast*, 并根据 Min Hit Distance 调整 View.Location**
 
 **2: 更新计算 *BlendWeight* 属性:** `virtual UpdateBlending(deltaTime)`
+- todo...

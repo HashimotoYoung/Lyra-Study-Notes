@@ -1,6 +1,6 @@
 ## FullBody JumpState  相关
 
-:memo: 这些 Anim Layers 皆通过 **单个Sequence Player** 输出 Pose
+:memo: 这些 Anim Layers 皆通过**单个 Sequence Player** 输出 Pose
 
 - Jump Start // 起跳动画
 - Jump Start Loop // 起跳到达到顶端的过程动画
@@ -19,13 +19,14 @@
 
 - `JumpFallLand`
 
-#### 主节点 `Sequence Evaluator` 变为相关时:
+#### 主节点 `Seq Evaluator` 变为相关时:
 
 - CALL `SetExplicitTime(0)`
 
-#### 主节点 `Sequence Evaluator` 更新时:
+#### 主节点 `Seq Evaluator` 更新时:
 
-- 执行 [DistanceMatchToTarget](./Basics.md#distancematchtotarget)
-`let groundDistance = GetMainBP.GroundDistance`
-`let jumpCurveName = "GroundDistance"`
-CALL `DistanceMatchToTarget(seqEvaluator, groundDistance, jumpCurveName)`
+- `let groundDistance = GetMainBP.GroundDistance`
+
+  `let jumpCurveName = "GroundDistance"`
+
+- CALL [DistanceMatchToTarget](./Basics.md#distancematchtotarget)(seqEvaluator, groundDistance, jumpCurveName)

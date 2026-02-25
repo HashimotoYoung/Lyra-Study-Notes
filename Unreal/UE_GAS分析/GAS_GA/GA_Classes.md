@@ -23,11 +23,11 @@
 `mutable FGameplayAbilitySpecHandle CurrentSpecHandle`
 - Instanced GA 专用属性
 
-`TSubclassOf<UGameplayEffect> CostGameplayEffectClass`
+`TSubclassOf<UGameplayEffect> CostGameplayEffectClass`  
 `TSubclassOf<UGameplayEffect> CooldownGameplayEffectClass`
 - 默认可选择分别绑定一个**Cost/Cooldown类**, 并在Commit GA时自动Apply
 
-`mutable int8 ScopeLockCount`
+`mutable int8 ScopeLockCount`  
 `mutable TArray<FPostLockDelegate> WaitingToExecute`
 - todo...
 
@@ -90,7 +90,7 @@ bool UGameplayAbility::IsPredictingClient()
 - UPROPERTY(NotReplicated)
 - 当前激活的 `UGA` instance 数量
 
-`TArray<TObjectPtr<UGameplayAbility>> NonReplicatedInstances` 
+`TArray<TObjectPtr<UGameplayAbility>> NonReplicatedInstances`   
 `TArray<TObjectPtr<UGameplayAbility>> ReplicatedInstances` 
 - **Instanced GA 专属,** 对于 *InstancedPerActor* GA, 队列数量为1
 - Any `UGA` instance will reside in **either of them**, 取决于 `UGA::ReplicationPolicy `

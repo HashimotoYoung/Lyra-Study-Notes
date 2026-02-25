@@ -1,7 +1,3 @@
-## FAQ:
-
----
-
 ## 1. GE Executions (属性计算器)
 
 **Executions** decide how to change it *(code-driven)*.
@@ -204,6 +200,6 @@ float UPAMMC_PoisonMana::CalculateBaseMagnitude_Implementation(const FGameplayEf
 	return Reduction;
 }
 ```
-#### :star: When `CalculateBaseMagnitude_Implementation` is called?
+#### :mag: When `CalculateBaseMagnitude_Implementation` is called?
 可理解为等价于Add **FixedFloat** 的时机, 具体为:
 - When a `GameplayEffect` is **applied(附加时)**

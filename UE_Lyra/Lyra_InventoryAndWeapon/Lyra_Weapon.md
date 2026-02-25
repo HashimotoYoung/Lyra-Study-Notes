@@ -98,7 +98,7 @@ TArray<TObjectPtr<AActor>> SpawnedActors; // 装备 Actors 引用
 ##### 类关系:
 - Contained by `ULyraEquipmentManagerComponent::EquipmentList`
 
-#### 子类扩展:
+#### 子类扩展内容:
 `ULyraWeaponInstance` Add:
   - **Anim Layer 配置相关, 使 Character 在切换武器时, 能够同时切换到正确的 Anim Layer 并 Link**
 
@@ -106,7 +106,6 @@ TArray<TObjectPtr<AActor>> SpawnedActors; // 装备 Actors 引用
 - 射击武器专有的属性, 例如: 最大击中距离(`MaxDamageRange`), 武器扩散角度(`CurrentSpreadAngle`)
   - :warning: 武器的基础伤害是定义在相关 GameplayEffect 中的
 - 射击相关逻辑
-  - 主
 - Tick 方法, 主要用于 Update Spread
 
 `B_WeaponInstance_Base` Add: 
@@ -127,12 +126,9 @@ TArray<TObjectPtr<AActor>> SpawnedActors; // 装备 Actors 引用
 
 ##### 主要属性:
 
-
-`BWeaponFire(Actor) weaponFire`: 开火效果
-`BWeaponImpact(Actor) weaponImpact`: 击中效果
-`BWeaponDecal(Actor) weaponDecal`: 弹坑效果
-
-
+`BWeaponFire(Actor) weaponFire`: 开火效果  
+`BWeaponImpact(Actor) weaponImpact`: 击中效果  
+`BWeaponDecal(Actor) weaponDecal`: 弹坑效果  
 
 ---
 ### ULyraEquipmentManagerComponent : UPawnComponent

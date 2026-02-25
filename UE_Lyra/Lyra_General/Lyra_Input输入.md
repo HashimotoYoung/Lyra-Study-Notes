@@ -2,13 +2,15 @@
 
 *1. IMC中选用 "鼠标XY2D" 的情况下无法触发 `Input_LookMouse` 事件, why?*
 - 进入UI界面时, **CommonUI**会调用InputMode相关API锁定鼠标输入模式:`UGameViewportClient::SetMouseLockMode()`
-  进入Gameplay后, "W_ShooterHUDLayout_C_0" 内会调用 `UCommonUIActionRouterBase::SetActiveRoot(FActivatableTreeRootPtr NewActiveRoot)` 来重新设置InputMode
+- 进入Gameplay后, "W_ShooterHUDLayout_C_0" 内会调用 `UCommonUIActionRouterBase::SetActiveRoot(FActivatableTreeRootPtr NewActiveRoot)` 来重新设置InputMode
 
 ---
 
 # Lyra Input
 
-> Lyra 中的玩家输入模块基于 EnhancedInput 插件实现
+> :books: Lyra 中的玩家输入模块基于 EnhancedInput 插件实现
+
+---
 
 ### FMappableConfigPair
 配置类, 负责给 EnhancedInputSystem 提供 Input Mapping Context
@@ -16,8 +18,8 @@
 - 本质上是一个 **Proxy** for `UPlayerMappableInputConfig`
 
 - **使用方式:** 
-  - Used with ***GFA_AddInputConfig***
-    会在`UGameFeatureAction_AddInputConfig::OnGameFeatureRegistering()`阶段进行注册
+  - Used with *GFA_AddInputConfig*
+    - 会在`UGameFeatureAction_AddInputConfig::OnGameFeatureRegistering()`阶段进行注册
 
 
 ##### 主要成员:
@@ -51,6 +53,7 @@ if (Pair.bShouldActivateAutomatically && Pair.CanBeActivated()) {
 
 - `ULyraPawnData` 默认引用一份 `ULyraInputConfig`, 用于 Character 初始化
 - Used by ***GFA_AddInputBinding*** 
+
 ```cpp
 USTRUCT(BlueprintType)
 struct FLyraInputAction {

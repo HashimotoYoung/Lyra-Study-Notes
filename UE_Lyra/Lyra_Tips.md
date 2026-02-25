@@ -32,6 +32,7 @@ void ULyraExperienceManagerComponent::CallOrRegister_OnExperienceLoaded(FOnLyraE
 	}
 }
 ```
+
 <br>
 
 #### 2. Wrap 蓝图回调 to 原生回调
@@ -50,6 +51,7 @@ void ULyraGamePhaseSubsystem::K2_StartPhase(TSubclassOf<ULyraGamePhaseAbility> P
 	StartPhase(PhaseAbility, EndedDelegate);
 }
 ```
+
 <br>
 
 #### 3. 使用 `TFunctionRef<...>` 作为参数Type
@@ -60,6 +62,7 @@ void ULyraGamePhaseSubsystem::K2_StartPhase(TSubclassOf<ULyraGamePhaseAbility> P
 typedef TFunctionRef<bool(const ULyraGameplayAbility* LyraAbility, FGameplayAbilitySpecHandle Handle)> TShouldCancelAbilityFunc;
 void CancelAbilitiesByFunc(TShouldCancelAbilityFunc ShouldCancelFunc, bool bReplicateCancelAbility);
 ```
+
 <br>
 
 #### 4. 使用 `[this, WeakThis]` for Lambda 回调
@@ -103,11 +106,12 @@ void UAsyncAction_PushContentToLayerForPlayer::Activate()
 
 #### 5. In-Place 构造
 - 例如当实现了 `FName` 构造函数时: 
-  :heavy_check_mark: `Some_Struct_Array.Emplace_GetRef( A_FName_Value )`
+  - :heavy_check_mark: `Some_Struct_Array.Emplace_GetRef( A_FName_Value )`
+
 <br>
 
 #### 6. UBlueprintAsyncActionBase 注意事项
-`UBlueprintAsyncActionBase`类本质上不属于任何 UWorld, 继承时可考虑 add 成员变量: `TWeakObjectPtr<UWorld> WorldPtr`
+- `UBlueprintAsyncActionBase`类本质上不属于任何 UWorld, 继承时可考虑 add 成员变量: `TWeakObjectPtr<UWorld> WorldPtr`
 
 ---
 ## :bulb: 设计模式 
@@ -138,6 +142,8 @@ TArray<FPhaseObserver> PhaseEndObservers;
 ```
 
 ---
-## :bulb: 资源加载 
-#### 避免链式加载
-`ULyraUserFacingExperienceDefinition` 使用了**ID**而非References来引用`ULyraExperienceDefinition`,避免了强制加载
+## :bulb: 资源加载
+
+#### 避免链式硬加载
+
+- `ULyraUserFacingExperienceDefinition` 使用了 **ID** 而非 References 来引用`ULyraExperienceDefinition`, 减少硬加载

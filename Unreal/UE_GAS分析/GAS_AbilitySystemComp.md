@@ -21,18 +21,16 @@ ASC 基本可看作是一个 **Manager** of GAS Elements
 - UPROPERTY(Replicated)
 - **GameplayEffect 相关**
 
-`FActiveGameplayCueContainer ActiveGameplayCues;`
-`FActiveGameplayCueContainer MinimalReplicationGameplayCues;`
+`FActiveGameplayCueContainer ActiveGameplayCues`  
+`FActiveGameplayCueContainer MinimalReplicationGameplayCues`
 - UPROPERTY(Replicated),   
   - `MinimalReplicationGameplayCues` 的同步条件为 `COND_SkipOwner`
 - **GameplayCue 相关**
 
-
-
 `FGameplayTagCountContainer GameplayTagCountContainer`
 - 记录 **Owned** GameplayTags
 
-`TObjectPtr<AActor> OwnerActor`
+`TObjectPtr<AActor> OwnerActor`  
 `TObjectPtr<AActor> AvatarActor`
 
 - 皆为 UPROPERTY(ReplicatedUsing = OnRep_OwningActor)
@@ -68,8 +66,8 @@ ASC 基本可看作是一个 **Manager** of GAS Elements
   ```
 - :pushpin: 该 ASC 持有的 **GA Specs**, 反映了哪些 GA 可用
 
-`int32 AbilityScopeLockCount`
-`TArray<FGameplayAbilitySpecHandle, TInlineAllocator<2>> AbilityPendingRemoves`
+`int32 AbilityScopeLockCount`  
+`TArray<FGameplayAbilitySpecHandle, TInlineAllocator<2>> AbilityPendingRemoves`  
 `TArray<FGameplayAbilitySpec, TInlineAllocator<2> > AbilityPendingAdds`
 
 - 这三个属性用于 [Ability Scoped Lock 机制](#ability-scoped-lock-机制)
@@ -82,7 +80,7 @@ ASC 基本可看作是一个 **Manager** of GAS Elements
 ---
 
 ### :warning: ASC 注意事项:
-- `InitAbilityActorInfo()` relys on **Fully-Replicated** `PlayerController`
+- `InitAbilityActorInfo()` relies on **Fully-Replicated** `PlayerController`
   因此通常可以在 PC 中调用以下方法, 以确保初始化完善, 例如:
     ```cpp
     void ALyraPlayerController::OnRep_PlayerState() {

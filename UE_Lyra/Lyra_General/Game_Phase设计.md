@@ -1,6 +1,6 @@
 # Lyra Game Phase
 
-Lyra 使用 GAS + SubSystem 来实现 "游戏阶段" 的设计
+>:books: Lyra 使用 GAS + SubSystem 来实现 "游戏阶段" 的设计
 
 - `ALyraGameState` 本身持有 ASC 组件
 - **每一个 "Phase" 被封装成一个 GA (`ULyraGamePhaseAbility`)**
@@ -49,7 +49,7 @@ private:
 
 ---
 
-### :star: `OnBeginPhase()` 实现部分
+### :pushpin: `OnBeginPhase()` 实现部分
 - Called in  `PhaseGA::ActivateAbility()`
 ```cpp
 void ULyraGamePhaseSubsystem::OnBeginPhase(const ULyraGamePhaseAbility* PhaseAbility, const FGameplayAbilitySpecHandle PhaseAbilityHandle)

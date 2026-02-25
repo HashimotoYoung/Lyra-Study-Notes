@@ -1,54 +1,61 @@
 
 ## FullBody_StopState (AnimLayer)
 
-- 和 FullBody_StartState 结构类似
-- 停止状态不处理任何 **Warping** 相关
+和 FullBody_StartState 结构类似
+
+- 此状态不处理任何 Warping 相关
 - 初始 Pose 为 `DistanceMatchToTarget( 0 或者 predictDistance )`
 
 ##### 相关属性:
 
 
 - `HipFireUpperBodyOverrideWeight`
-  // 以下属性用于预测停止距离
-  `Enum MainBP.LocalVelocityDirection` R
-  `MainBP.LocalVelocityDirectionAngleWithOffset` R;速度角度
-  `MainBP.DisplacementSpeed` R
-  `MainBP.GameplayTag_IsADS` R
-  `MainBP.IsCrouching` R
+
+  以下属性用于预测停止距离
+
+  `Enum MainBP.LocalVelocityDirection` 
+
+  `MainBP.LocalVelocityDirectionAngleWithOffset` // 速度角度
+
+  `MainBP.DisplacementSpeed` 
+
+  `MainBP.GameplayTag_IsADS` 
+
+  `MainBP.IsCrouching` 
 
 ##### 相关Anim序列:
 - `Jog_Stop_Cardinals` 四个方向
+
   `ADS_Stop_Cardinals`
+
   `Crouch_Stop_Cardinals`
-<br>
 
-#### 主节点 `Sequence Evaluator` 变为相关时:
-[ShouldDistanceMatchStop()](./Basics.md#bool-shoulddistancematchstop) // 无加速度但仍有移动速度时
 
-- 在设置完 Sequence 之后进行检测
-  **if** `ShouldDistanceMatchStop() == true` 
-    - // 什么都不做, 交由Update处理
+#### 主节点 `Seq Evaluator` 变为相关时:
+
+- 设置 Anim Sequence 
+
+- **if** [ShouldDistanceMatchStop()](./Basics.md#bool-shoulddistancematchstop) 
+    - // Do nothing, 交由 Update 处理
 
   **else** 
-    - `const distanceToTarget = 0`
-      CALL `DistanceMatchToTarget(distanceToTarget)`
-      // :star: **直接推进到Stop动画序列中角色 停稳不动 的时段**
-<br>
+    - CALL `DistanceMatchToTarget(distanceToTarget:0)`
 
-#### 主节点 `Sequence Evaluator` 更新时:
-[GetPredictStopDistance()](./Basics.md#float-getpredictedstopdistance)
+      // :star: **直接推进到 Stop序列 中角色停稳不动的时段**
+
+#### 主节点 `Seq Evaluator` 更新时:
+
 - 角色仍有移动速度时, 使用 "预测停止距离" 来推进 Evaluator
-  :star: 意味着Stop动画序列通常不会从 0 时刻开始播放, 而是从"首次预测距离"所在的时间点开始播放
-
-```ts
-let predictDistance = GetPredictStopDistance()
-if( ShouldDistanceMatchStop() && predictDistance > 0) {
-  DistanceMatchToTarget(predictDistance)
-}else{
-  //播完动画
-  USequenceEvaluatorLibrary::AdvanceTime()
-}
-```
+  ```ts
+  let predictDistance = GetPredictStopDistance()
+  if (ShouldDistanceMatchStop() && predictDistance > 0) {
+    DistanceMatchToTarget(predictDistance)
+  }else{
+    //播完动画
+    USequenceEvaluatorLibrary::AdvanceTime()
+  }
+  ```
+  - // [GetPredictStopDistance()](./Basics.md#float-getpredictedstopdistance)
 
 
 

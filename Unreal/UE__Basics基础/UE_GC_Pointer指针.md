@@ -57,14 +57,14 @@ Used for **non-UObject classes and structs allocated with `new` or `MakeShared/M
 
 When the first `TSharedPtr` is created for an object (often via `MakeShared`), Unreal allocates a small, separate data structure like a **`Control Block`**：
 - when `SharedRefCount==0`, **`TheActualObjPtr`** 对象被销毁
-- when `SharedRefCount==0 && WeakRefCount==0`, **`ControlBloack`** 自身被销毁 
+- when `SharedRefCount==0 && WeakRefCount==0`, **`ControlBlock`** 自身被销毁 
 ```cpp
-[TSharedPtr<T>] --指向--> [Control Block] //分配在heap上
-[TWeakPtr<T>] --指向-->   {
-                            T* TheActualObjPtr;
-                            int SharedRefCount;
-                            int WeakRefCount;
-                          }                    
+[TSharedPtr<T>] ---> [Control Block] //分配在heap上
+[TWeakPtr<T>] --->  {
+                        T* TheActualObjPtr;
+                        int SharedRefCount;
+                        int WeakRefCount;
+                    }                    
 ```
 ---
 
@@ -112,14 +112,14 @@ When the first `TSharedPtr` is created for an object (often via `MakeShared`), U
 
 `TWeakObjectPtr` is a *Non-Owning, templated, weak* pointer
 - 使用目的: **safe observation** and **breaking cyclic references**
-- 本质是一个 **Mordern Wrapper** of `FWeakObjectPtr`, to provide:
+- 本质是一个 **Modern Wrapper** of `FWeakObjectPtr`, to provide:
   - Type safety (`T*` instead of raw `UObject*`)
   - Helper funcs like `IsValid(),Get(),Pin()`
 ---
 
 ### `struct A : public TSharedFromThis<A>` 用法
 
-Inheriting `TSharedFromThis<FStreamableHandle>` allows `FStreamableHandle` to **create a safe `TSharedPtr` to self** (by using `SharedThis(this)`), so it can be passed around without risking double delete or invalid memory access. 
+- Inheriting `TSharedFromThis<FStreamableHandle>` allows `FStreamableHandle` to **create a safe `TSharedPtr` to self** (by using `SharedThis(this)`), so it can be passed around without risking double delete or invalid memory access. 
 
 #### Why 不能直接返回 `TSharedPtr<FStreamableHandle>(this)`?
 

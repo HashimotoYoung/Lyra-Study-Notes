@@ -1,6 +1,6 @@
 ## PlayerController 解析
 
-##### Props:
+##### 主要属性:
 
 #### `FRotator ControlRotation`
 - 世界坐标系, 代表控制器旋转
@@ -9,13 +9,11 @@
 - 缓存每帧旋转相关的输入, tick结束前清空
   主要用于`UpdateRotation()`
 
-
----
-##### Functions:
+##### 主要方法:
 
 ### `TickActor()`
 
-- 检查PlayerInput 并调用 `PlayerTick(float DeltaTime)`
+- 检查 PlayerInput 并调用 `PlayerTick(float DeltaTime)`
     - 会触发Input相关的Tick和callback, 例如:
     `ULyraHeroComponent::Input_LookMouse()`
       => `Pawn->AddControllerYawInput(Value.X)`;
@@ -209,21 +207,19 @@ DONE
 ### `UpdateRotation(float DeltaTime)`
 
 **负责计算当前的 ControlRotation** 并 Apply to Pawn's Rotation
-- 默认在`PlayerTick()`的最后处会执行
+- 默认在 `PlayerTick()` 的最后执行
 
-- :warning: Lyra的TPS模式会走这里, 因此 Player Character 会一直跟着镜头旋转
+- :warning: Lyra 的 TPS 模式会走这里, 因此 Player Character 会一直跟着镜头旋转
 
-:pencil2: **Start**
+:pencil2: **Start**  
+1: 获取**当前帧的 `RotationInput`** 和 `ViewRotation = GetControlRotation()`, 交由 PCM 处理: `APlayerCameraManager::ProcessViewRotation()`
+- 会先交给 member `UCameraModifier List`进行 process
+- 然后做角度限制 `LimitViewPitch/Yaw/Roll()`
 
-1: 获取**当前帧的 `RotationInput`** 和 `ViewRotation = GetControlRotation()`
-  交由 PCM 处理: `APlayerCameraManager::ProcessViewRotation()`
-  - 会先交给 member `UCameraModifier List`进行 process
-  - 然后做角度限制 `LimitViewPitch/Yaw/Roll()`
-
-2: `SetControlRotation(ViewRotation);` 
+2: `SetControlRotation(ViewRotation)` 
 - 如果 `Pawn != null` 则 `APawn::FaceRotation(FRotator ViewRotation, float DeltaTime)`
 - **如果 Pawn 有设置 "基于Controller旋转"** like `bUseControllerRotationYaw = true`
-    则直接在对应轴上 `SetActorRotation(ViewRotation)` 
+  - 则直接在对应轴上 `SetActorRotation(ViewRotation)` 
   
 
 

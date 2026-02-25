@@ -22,7 +22,7 @@
 	```
 ###### :pushpin: 当尝试 Equip 时:
 1. 需要先获取 物品实例 Item(`ULyraInventoryItemInstance*`)
-2. **if** 此 Item 持有 `UInventoryFragment_EquippableItem` 类型碎片 => 获取其 `EquipmentDefinition`
+2. **if** 此 Item 持有 `UInventoryFragment_EquippableItem` 类型碎片, 获取其 `EquipmentDefinition`
 3. `ULyraEquipmentManagerComponent` 负责**创建 装备实例** EquippedItem(`ULyraEquipmentInstance*`) 并添加到 `EquipmentList (FastArray)` 中进行 Replicate
 4. 物品实例 会作为 **Instigator** 和 装备实例 进行绑定
 	  - `EquippedItem->SetInstigator(Item)`

@@ -1,5 +1,3 @@
-todo... 预测, 同步
-
 # Gameplay Effect 相关流程
 
 :books: GE 的核心流程为 Apply GameplayEffect, 在该流程中会**根据GE's DurationType** 走向两个不同的子流程: [Add GE Spec 流](#add-ge-spec-流) 和 [Execute GE Spec 流](#execute-ge-spec-流)
@@ -9,7 +7,6 @@ todo... 预测, 同步
 ## 1. Apply GameplayEffect 流
 
 :memo: 此示例以 `GA->ApplyGameplayEffectToTarget()` 为入口, 此方法最终会调转至 **核心API:** **`ASC::ApplyGameplayEffectSpecToSelf()`**
-
 
 ### Apply GE to Target 流
 - GE Spec 实例会在过程中被**创建**
@@ -21,7 +18,7 @@ TArray<FActiveGameplayEffectHandle> UGameplayAbility::ApplyGameplayEffectToTarge
   const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayAbilityTargetDataHandle& Target, 
   TSubclassOf<UGameplayEffect> GameplayEffectClass, float GameplayEffectLevel, int32 Stacks) const
 ```
-:pencil2: **Start**
+:pencil2: **Start**  
 1: Apply 前的相关检测:
 - **if** ! ( *HasAuthority* || `ShouldPredictTargetGameplayEffects()` ), **return**
 - [Predict] **if** `HasAuthorityOrPredictionKey` ?? 
@@ -45,11 +42,13 @@ FPredictionKey PredictionKey)`
 ---
 
 ### Apply GE to Self 流 :star:
+
 - 注意在进入该流程前, GE Spec 已经在外部被生成
+
 ```cpp
 FActiveGameplayEffectHandle ASC::ApplyGameplayEffectSpecToSelf(const FGameplayEffectSpec& GameplayEffect, FPredictionKey PredictionKey = FPredictionKey())
 ```
-:pencil2: **Start**
+:pencil2: **Start**  
 1: [施加GE区域锁](#fscopedactivegameplayeffectlock-区域锁分析) 
 
 2: 在 Do Apply 前按顺序进行5项检测, 未通过则 **return**
@@ -100,15 +99,14 @@ FActiveGameplayEffectHandle ASC::ApplyGameplayEffectSpecToSelf(const FGameplayEf
 ```cpp
 FActiveGameplayEffect* FActiveGameplayEffectsContainer::ApplyGameplayEffectSpec(const FGameplayEffectSpec& Spec, FPredictionKey& InPredictionKey, bool& bFoundExistingStackableGE)
 ```
-:pencil2: **Start** from the func
-
+:pencil2: **Start** from the func  
 1: [施加GE区域锁](#fscopedactivegameplayeffectlock-区域锁分析) 
 
 2: FindOrCreate a `FActiveGameplayEffect* AppliedActiveGE`
 
 **if** 发现已存在 an **Active-Stackable** GE Spec
   - **if** *Not Authority*, **return** // 禁止预测该类GE
-  - todo... handle stacakble
+  - todo... handle stackable
   - `AppliedActiveGE` = `ExistingStackableGE`
 
 **else**
@@ -138,7 +136,7 @@ FActiveGameplayEffect* FActiveGameplayEffectsContainer::ApplyGameplayEffectSpec(
 
 5: 重新计算 Duration 
 
-6: **if** GE has Peroid , 注册 Peroid Callbacks
+6: **if** GE has Period , 注册 Period Callbacks
 
 7: [Server] 处理网络同步部分
 
@@ -158,7 +156,7 @@ FActiveGameplayEffect* FActiveGameplayEffectsContainer::ApplyGameplayEffectSpec(
 ```cpp
 FActiveGameplayEffectsContainer::InternalOnActiveGameplayEffectAdded(FActiveGameplayEffect& Effect)
 ```
-:pencil2: **Start**
+:pencil2: **Start**  
 1: [施加GE区域锁](#fscopedactivegameplayeffectlock-区域锁分析)
 
 2: 记录 *Effect* 和 *Effect附带的Tags* 的关系到 `this.ActiveEffectTagDependencies`
@@ -227,7 +225,7 @@ GAS中修改 Attribute.BaseValue 的逻辑流程
 
 FActiveGameplayEffectsContainer::SetAttributeBaseValue(FGameplayAttribute Attribute, float NewBaseValue)
 ```
-:pencil2: **Start**
+:pencil2: **Start**  
 1: 通知 AS  `NewBaseValue` (**传引用**): **`AS::PreAttributeBaseChange()`**
 
 2: 获取 `FGameplayAttributeData` 并赋值 BaseValue

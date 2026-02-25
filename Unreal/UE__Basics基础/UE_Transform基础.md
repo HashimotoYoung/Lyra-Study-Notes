@@ -1,5 +1,5 @@
 # UE Transform 基础
----
+
 ## Rotation 相关:
 ### 1. 转换 Vector 到不同坐标系
 
@@ -62,7 +62,7 @@ float UKismetAnimationLibrary::CalculateDirection(const FVector& Velocity, const
 		const FVector RightVector = RotMatrix.GetScaledAxis(EAxis::Y);
 		const FVector NormalizedVel = Velocity.GetSafeNormal2D();
 
-		// Is roughly forwad 结果区间为(-1,1)
+		// Is roughly forward 结果区间为(-1,1)
 		const float ForwardCosAngle = static_cast<float>(FVector::DotProduct(ForwardVector, NormalizedVel));
 		//将(-1,1)映射到Degree区间(0,180)
 		float ForwardDeltaDegree = FMath::RadiansToDegrees(FMath::Acos(ForwardCosAngle));

@@ -8,7 +8,7 @@
 ##### 主要属性:
 
 ```cpp
-// 用于 Modif Attribute  
+// 用于 Modify Attribute  
 TArray<FGameplayModifierInfo> Modifiers
 TArray<FGameplayEffectExecutionDefinition> Executions
 
@@ -24,7 +24,7 @@ GE 的具体应用实例
 
 ##### 类关系:
 - When an GA / ASC wants to apply a GE, it creates a `FGameplayEffectSpec` from `UGameplayEffect`'s **CDO** via `ASC::MakeOutgoingSpec()`
-- When a **Duration-based** `FGameplayEffectSpec` is successfully applied to the ASC, its generates a  `FActiveGameplayEffect`, which are then added to the ASC's `FActiveGameplayEffectsContainer`
+- When a **Duration-based** `FGameplayEffectSpec` is successfully applied to the ASC, it generates a  `FActiveGameplayEffect`, which are then added to the ASC's `FActiveGameplayEffectsContainer`
 ##### 主要属性:
 
 `TArray<FModifierSpec> Modifiers`
@@ -43,14 +43,13 @@ GE 的具体应用实例
   ```
 <br>
 
-`FGameplayEffectAttributeCaptureSpecContainer CapturedRelevantAttributes`: UPROPERTY(NotReplicated)
-`FTagContainerAggregator	CapturedSourceTags`: UPROPERTY(NotReplicated)
+`FGameplayEffectAttributeCaptureSpecContainer CapturedRelevantAttributes`: UPROPERTY(NotReplicated)  
+`FTagContainerAggregator	CapturedSourceTags`: UPROPERTY(NotReplicated)  
 `FTagContainerAggregator	CapturedTargetTags`: UPROPERTY(NotReplicated)
 - [Capture Data 相关](./GE_DataCapture捕获.md#ge-中的-捕获-机制)
 
+##### 其它属性:
 ```cpp
-// others
-
 TObjectPtr<const UGameplayEffect> Def // 指向 GE 模板
 float Duration; Period; ChanceToApplyToTarget; Level; // GE相关属性
 FGameplayEffectContextHandle EffectContext // 上下文信息句柄
@@ -75,12 +74,12 @@ todo...
 
 ### FActiveGameplayEffectsContainer :  `FFastArraySerializer`
 
-:star: 虽然命名以 "Container" 结尾, 但实际类似于 Manager 类,是 GE 中**最核心**的数据结构
+:star: 虽然命名为"Container", 但实际为 Manager 类,是 GE 中**最核心**的数据结构
 ##### 类关系:
-- Owned by ASC with UPROPERTY(**Replicated**), 
+- Owned by ASC with UPROPERTY(**Replicated**) 
 
 ##### 主要属性:
-`UAbilitySystemComponent* Owner` // 被 ASC 持有
+`UAbilitySystemComponent* Owner` // 被 ASC 持有  
 `TArray<FActiveGameplayEffect>	GameplayEffects_Internal` // 持有 active GEs
 
 `TMap<FGameplayTag, TSet<FActiveGameplayEffectHandle> >	ActiveEffectTagDependencies`
@@ -91,8 +90,8 @@ todo...
 
 - :pushpin: 如果一个属性没有绑定任何 Aggregator, 则其 **CurrentValue === BaseValue**
 
-`mutable int32 ScopedLockCount` 
-`FActiveGameplayEffect*	PendingGameplayEffectHead`	
+`mutable int32 ScopedLockCount`   
+`FActiveGameplayEffect*	PendingGameplayEffectHead`  
 `FActiveGameplayEffect** PendingGameplayEffectNext`
 - Apply GE 流 相关
 
@@ -103,7 +102,7 @@ todo...
 ```cpp
 FActiveGameplayEffect* ApplyGameplayEffectSpec(const FGameplayEffectSpec& Spec, FPredictionKey& InPredictionKey, bool& bFoundExistingStackableGE)
 ```
-- [Aply GE Spec 流](./GAS_GE流程.md#apply-ge-spec-流)  主入口
+- [Apply GE Spec 流](./GAS_GE流程.md#apply-ge-spec-流)  主入口
 <br>
 
 #### `ExecuteActiveEffectsFrom()`
@@ -157,7 +156,7 @@ ApplyModToAttribute(const FGameplayAttribute &Attribute, TEnumAsByte<EGameplayMo
     - 添加 Mod 到此 `FAggregator` 中
       - `FAggregator::AddAggregatorMod(...)`
   
-  - **else** todo... (peroid处理)
+  - **else** todo... (period处理)
 
 3: 授予 *附带的 Tags* 到 Owner ASC
 

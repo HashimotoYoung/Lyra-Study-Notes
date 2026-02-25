@@ -28,7 +28,6 @@
 
 Experience 可视为一个 “Advanced Game Mode”, 主要由两部分构成:
 1. `ULyraExperienceManagerComponent`
-
 2. `ULyraExperienceDefinition`
 
 #### Features:
@@ -118,6 +117,7 @@ Lyra Experience 的**配置资产层**实现, 包含:
 ### Load Experience 流
 
 :pencil2: **Start**
+
 1: Server 在 `ALyraGameMode::InitGame()` 执行后的下一帧启动流程
 - 获取 Experience ID (`FPrimaryAssetId`) 
 - 设置当前 Experience: `ULyraExperienceManagerComponent::SetCurrentExperience(ExperienceId)`
