@@ -30,7 +30,7 @@
 - [Gameplay Abilities](./Unreal/UE_GAS分析/GAS_GA/GA_Basics.md#gameplay-ability-总览): "技能" 行为的封装
 - [Gameplay Effect](./Unreal/UE_GAS分析/GAS_GE/GE_Basics.md#gas-ge-总览): 效果与Buff 
 - [AttributeSet](./Unreal/UE_GAS分析/GAS_Attribute.md#gas-attribute): 属性定义, 如血量、体力
-- [Gameplay Cue](./Unreal/UE_GAS分析/GAS_GCue.md#gas-gameplaycue-分析): 驱动表现层视觉特效/音效
+- [Gameplay Cue](./Unreal/UE_GAS分析/GAS_GCue.md#gas-gameplaycue-分析): 表现层视觉特效/音效
 - [GAS Prediction](./Unreal/UE_GAS分析/GAS_Prediction.md#gas-预测机制): 客户端预测与服务器校正
 
 ### Animation 
