@@ -52,13 +52,16 @@ struct FLyraEquipmentActorToSpawn
 
 *"ID_Pistol"* (`ULyraInventoryItemDefinition`) has:
   - 五个 Fragments, 其中之一的类型为 `InventoryFragment_EquippableItem`
-    - which refers to asset *"WID_Pistol"*
+    - refers to asset *"WID_Pistol"*  
+
+![img](../_img/ID_Pistol.png)
 
 *"WID_Pistol"* (`LyraEquipmentDefinition`) has:
   - TSubclassOf **Weapon Instance**: `B_WeaponInstance_Pistol`
   -  手枪相关 GA 例如 `"GA_Weapon_Fire_Pistol"`, `"GA_Weapon_Reload_Pistol"`
   - TSubclassOf **Weapon Actor**: `B_Pistol`
 
+![img](../_img/WID_Pistol.png)
 
 ---
 
