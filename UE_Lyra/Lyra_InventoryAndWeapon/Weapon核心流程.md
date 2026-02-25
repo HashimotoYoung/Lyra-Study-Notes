@@ -3,7 +3,7 @@
 ### 开火射击流:
 
 **玩家输入 (Client):**
-- Override 控制层输入后处理方法 (`AEchoPlayerController::PostProcessInput`)
+- Override 控制层输入后处理方法 (`ALyraPlayerController::PostProcessInput`)
 - LyraASC 负责处理输入信息: [ProcessAbilityInput()](../Lyra_GAS/Basics_GAS.md#processabilityinputfloat-deltatime-bool-bgamepaused)  
   // 会调用 `TryActivateAbility()`
 

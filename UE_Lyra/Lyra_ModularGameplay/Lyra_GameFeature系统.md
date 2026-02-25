@@ -3,7 +3,7 @@
 
 > :books: Lyra ModularGameplay 三大系统之一, 和 GFCM 强耦合
 
-Game Features 插件本身类似于一个 **Plugin 生成器**, 专门用于生成与游戏玩法紧密相关的 `GF_Plugin`, which are:
+Game Features 插件本身类似于一个 **Plugin 生成器**, 专门用于制作游戏玩法相关的 `GF_Plugin`, which are:
 
 - **单向依赖:** 一般来说插件是不依赖项目的, but `GF_Plugins` are desgined to be *project-based*, should rely on the core gameplay logic and **could rely on other plugins**
   - 另一方面, 游戏核心逻辑不应依赖具体的 `GF_Plugin`
@@ -16,7 +16,7 @@ Game Features 插件本身类似于一个 **Plugin 生成器**, 专门用于生�
 1. Content Assets: Includes `Blueprints`, `Materials`, `Skeletal Meshes`, `Animations`, `Textures`, etc., all stored **within the plugin’s `Content/` folder.**
 2. C++ Code
 3. Dependencies on other Plugins are recorded in `.uplugin` file
-4. :pushpin: ***Game Feature Data Asset* :** Every GF plugin has one central `UGameFeatureData` asset. This asset, which lives in the root of the plugin's content folder, is the **核心配置文件 for the feature**. It's where you define ***the list of Game Feature Actions*** to run when the feature is activated.
+4. :pushpin: ***Game Feature Data Asset* :** 每个 GF Plugin 会有一个 Main `UGameFeatureData` 资产作为核心配置文件. It's where you define ***the list of Game Feature Actions*** to run when the feature is activated.
  
 ---
 

@@ -70,7 +70,7 @@ Lyra 中物品的 **运行时** 定义
 
 "背包" 组件, 定义了一系列方法来管理 InventoryItems (添加/删除...)
 
-- Added dynamically to `Controller` by GameFeature "ShootCore"
+- Added dynamically to `Controller` by GameFeature "ShooterCore"
 - Contains an array of `ULyraInventoryItemInstance`
   ```cpp
   // in ULyraInventoryManagerComponent.h

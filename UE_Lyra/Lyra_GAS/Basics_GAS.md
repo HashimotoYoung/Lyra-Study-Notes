@@ -6,8 +6,8 @@
 ##### 主要属性:
 
 `TObjectPtr<ULyraTagRelationshipMapping> TagRelationshipMapping` 
-- 引用**数据资产** **`ULyraTagRelationshipMapping`**: 
-  - 该**配置类**持有 `Array< ULyraGameAbility之间的Tag关系 >`, 并提供API辅助处理Tag相关的ASC方法, 例如 `virtural ApplyAbilityBlockAndCancelTags()` 
+- 引用**数据资产** **`ULyraTagRelationshipMapping`**
+  - 该类主要负责集中初始化 `ULyraGameAbility` 间的 Tag 关系(Cancel/Block)
 
 
 `TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles`  

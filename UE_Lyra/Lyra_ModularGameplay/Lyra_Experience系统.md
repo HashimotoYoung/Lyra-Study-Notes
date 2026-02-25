@@ -26,15 +26,16 @@
 
 > :books: Lyra ModularGameplay 三大系统之一, 在设计上是相对独立的系统
 
-Experience 可视为一个 “Advanced Game Mode”, 主要由两部分构成:
-1. `ULyraExperienceManagerComponent`
-2. `ULyraExperienceDefinition`
+Experience 可视为一个 “Advanced Game Mode”, 主要由两部分构成 `ULyraExperienceManagerComponent`
+and `ULyraExperienceDefinition`
 
 #### Features:
 - **延迟启动:** The actual Start of Gameplay is **delayed until** `OnExperienceLoaded`, usually long after `BeginPlay()`.
-- :memo: **游戏模式"组件化":** Lyra 弱化了传统 GameMode 的逻辑重心, `ALyraGameMode` 变成了一个单纯逻辑宿主(Host), 不再负责处理具体的游戏规则（如得分、时限），而是通过 Experience 动态注入游戏规则 (例如添加自定义`GameStateComponent`)
-- Experience 在设计层面上是 **decoupled** with `ULevel` 
-  - 但也需要一些特定Actor 例如 `PlayerStart`
+- :memo: **游戏模式"组件化":** Lyra 弱化了传统 GameMode 的逻辑重心, 
+`ALyraGameMode` 更像是逻辑“宿主/壳”, 玩法规则主要通过 Experience 注入（GameStateComponent、ControllerComponent 等）
+
+- Experience 在设计上与 `ULevel` 弱耦（同一关卡可搭配不同 Experience）
+  - 可能需要特定 Actor, 例如 `PlayerStart`
 
 ---
 ### ULyraExperienceManagerComponent : `UGameStateComponent`
