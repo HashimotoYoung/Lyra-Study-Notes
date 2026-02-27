@@ -117,7 +117,7 @@ void UGameFeatureAction_AddComponents::OnGameFeatureActivating(FGameFeatureActiv
 void UGameFeatureAction_AddComponents::AddToWorld(const FWorldContext& WorldContext, FContextHandles& Handles) {
 	...
 	//获取 GFCM
-	UGameFrameworkComponentManager* GFCM = UGameInstance::GetSubsystem<UGameFrameworkComponentManager>(GameInstance)) 
+	UGameFrameworkComponentManager* GFCM = UGameInstance::GetSubsystem<UGameFrameworkComponentManager>(GameInstance)
 	
 	//判断 server 或 client 添加
 	const ENetMode NetMode = World->GetNetMode();

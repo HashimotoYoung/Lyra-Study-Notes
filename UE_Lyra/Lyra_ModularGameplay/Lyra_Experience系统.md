@@ -155,8 +155,8 @@ Lyra Experience 的**配置资产层**实现, 包含:
   - High Priority: 框架底层
 
   - Normal Priority: 游戏流程
-    - :pushpin: 进而触发 `UAsyncAction_ExperienceReady::OnReady` 的 Broadcast 
-    => `"B_ControlPointScoring"` 在回调后, 会通知 `ULyraGamePhaseSubsystem` **开始游戏内流程(Start Phase)**
+    - :pushpin: 进而触发 `UAsyncAction_ExperienceReady::OnReady` 的 Broadcast   
+    - `"B_ControlPointScoring"` 在回调后, 会通知 `ULyraGamePhaseSubsystem` **开始游戏内流程(Start Phase)**
 
   - Low Priority: Bot 创建
 

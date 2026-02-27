@@ -1,15 +1,15 @@
 ## Lyra GameFrameworkComponentManager
->:books: Lyra ModularGameplay 三大系统之一, 继承自 `UGameInstanceSubsystem` 
+>:books: Lyra ModularGameplay 三大系统之一 
 
 内部实际由**两个子系统组成**: [*Extension Handlers System* ](#extension-handlers-system-ehs) 和 [*Init States System*](./Lyra_GFCM_InitStates系统.md)
 - 两者代码层面基本自洽, 无相互依赖
-- GFCM 被 Game Feature 高度依赖, 和 Experience 无耦合
+- GFCM 被 Game Feature 高度依赖
 
 ---
 
 ## Extension Handlers System (EHS)
 
-> :books: 可看作是一个中介管理系统, 此系统是将 Game Feature 从 “静态资产” 转化为 “运行时 Actor 行为” 的关键桥梁
+> :books: EHS 可看作是一个中介管理系统, 此系统是将 Game Feature 从 “静态资产” 转化为 “运行时 Actor 行为” 的关键桥梁
 
 主要提供以下功能:
 1. **Dynamic Component Injection:** 
@@ -29,6 +29,8 @@
 
 ---
 ### UGameFrameworkComponentManager(ExtensionHandlers Part)
+
+-  继承自 `UGameInstanceSubsystem`
 
 ##### 主要属性:
 
@@ -71,16 +73,17 @@ const TSoftClassPtr<AActor>& ReceiverClass, TSubclassOf<UActorComponent> Compone
 
 2. 封装请求: `FComponentRequest NewRequest{ ReceiverClassPath, ComponentClassPtr }`
 
-3. 更新请求记数 for [RequestTrackingMap](#tmapfcomponentrequest-int32-requesttrackingmap) 
-**if** "是此类请求的第一次调用" (`RequestCount == 1`):
-   - :pushpin: 注册 **ReceiverClassPath** 和 **ComponentClassPtr** 到 [ReceiverClassToComponentClassMap](#tmapfcomponentrequestreceiverclasspath-tsetuclass-receiverclasstocomponentclassmap-star)
+3. 添加请求或更新记数到 [RequestTrackingMap](#tmapfcomponentrequest-int32-requesttrackingmap) 
 
-     > 通过这一步 Actor类 和 Added Components类形成映射关系 
-   - GFCM 会立即查询并获取 **当前 World** 中所有匹配 *ReceiverClass* 类型的 Actors, 并创建Component实例
-     - :warning: 如果这些 Actors 在生成时没有注册为 *Receiver*, 会报警告提示
+   - **if** "是第一次请求" (`RequestCount == 1`)
+     - :pushpin: 注册 **ReceiverClassPath** 和 **ComponentClassPtr** 到 [ReceiverClassToComponentClassMap](#tmapfcomponentrequestreceiverclasspath-tsetuclass-receiverclasstocomponentclassmap-star)
+
+       > 通过这一步 Actor类 和 Added Components类形成映射关系 
+     - GFCM 会立即查询并获取 **当前 World** 中所有匹配 *ReceiverClass* 类型的 Actors, 并创建Component实例
+       - :warning: 如果这些 Actors 在生成时没有注册为 *Receiver*, 会报警告提示
 
 
-4. 返回 Handle  
+4. 返回请求 Handle  
    - `return MakeShared<FComponentRequestHandle>(this, ReceiverClass, ComponentClass)`
 
 <br>
@@ -95,12 +98,12 @@ const TSoftClassPtr<AActor>& ReceiverClass, TSubclassOf<UActorComponent> Compone
 ---
 
 ### Auto Cleanup :star:
-EHS使用 **Request 记数机制** 来实现自动清理功能
+EHS 使用 **Request 记数机制** 来实现自动清理功能
 
 - 当 GFA 调用 `AddComponentRequest()` 和 `AddExtensionHandler()` 时:
-  - GFCM 将调用封装成一次请求 (`FComponentRequest newReq`) 并记录在 `this.RequestTrackingMap` 
+  - GFCM 将调用封装为请求 (`FComponentRequest newReq`) 并记录在 `this.RequestTrackingMap` 
   - 返回句柄 `MakeShared<FComponentRequestHandle>(this, data...)` 给 GFA 持有
-    > `FComponentRequestHandle` 的结构和 `FComponentRequest` 基本一致, 方便析构时查询
+    > `FComponentRequestHandle` 的数据结构和 `FComponentRequest` 基本一致, 方便析构时查询
 - 当 GF Deactivate 时, 相应 GFA 会 Clear Containers of `TSharedPtr<FComponentRequestHandle>`
 - :pushpin: **In `FComponentRequestHandle`'s Destructor**
   - 通知 GFCM 减一请求记数, 当记数 == 0 时,清理对应数据 in `ComponentClassToComponentInstanceMap/ReceiverClassToComponentClassMap`
