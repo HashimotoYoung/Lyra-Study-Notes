@@ -33,13 +33,15 @@ The `GameState` should manage **information that is meant to be known to all con
 
 Think of the `GameState` as the "**Replicated Snapshot of the Current Game's State."**
 
-- **Lifecycle:** 随`UWorld`
-- **Replicated to All Clients:** A single `GameState` instance exists on the server, and copies of it are replicated to **every connected client**.
-- 使用时需要考虑哪些Property应该放在GameState,哪些放在PlayerState
+- Spawned by `AGameModeBase`, therefore has similar 
+**Lifecycle**
+- 网络层:
+  - **Replicated to All Clients:** A single `GameState` instance exists on the server, and copies of it are replicated to **every connected client**.
+  - 只支持 MultiCast
+  - Always Relevent
 
-:star:**对比`GameMode`和`GameState`:** 
 
-`GameMode` **decides**, `GameState` **tells** --- The `GameMode` enacts the rules on the server, and the GameState broadcasts the results or current status of those rules to all players.
+- GameMode **decides**, GameState **tells** --- The GameMode enacts the rules on the server, and the GameState broadcasts the results or current status of those rules to all players.
 
 ---
 
@@ -77,4 +79,19 @@ The player controller class is a **manager class** that
 ### Character
 
 ---
+
+## UE Local Player
+- one exists on the owning client
+- Lasts for the duration of game instance
+- 支持继承
+
+##### 类关系:
+- Can get `ULocalPlayer` from `APlayerController`
+
+
+# AGameModeBase
+- get from world
+- Can Configure most GameFramework classes here
+- Each ULevel' WorldSetting can have an specific GameMode
+
 

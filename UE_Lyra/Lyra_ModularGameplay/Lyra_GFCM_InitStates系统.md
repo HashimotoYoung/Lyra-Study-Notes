@@ -110,15 +110,17 @@ void UGameFrameworkComponentManager::ProcessFeatureStateChange(AActor* Actor, co
 - 相关用例: [Init Lyra Character 流](#init-lyra-character-流)
 
 ##### 主要方法:
+
 #### `TryToChangeInitState(FGameplayTag DesiredState)`
   - Implementer 首先判断是否可以推进状态: 
     - `virtual bool CanChangeInitState()`
   - **if** 判断为 True:
     - **在 Actor 层** 执行回调: `virtual void HandleChangeInitState()`
     - **在 ISS 层** Update `ActorFeatureMap`  中的 `CurrentState`, 并执行[通知回调](#processfeaturestatechangeaactor-actor-const-factorfeaturestate-statechange)
+
 #### `ContinueInitStateChain(const TArray<FGameplayTag>& InitStateChain)`
 - 依据指定的 "状态链" 参数, **尝试循环推进 Feature  State** 
-  - Would call `TryToChangeInitState()` Looply
+  - 循环调用 `TryToChangeInitState()`
 
 
 ---

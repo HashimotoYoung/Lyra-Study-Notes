@@ -163,9 +163,6 @@ protected void UGameplayAbility::CallActivateAbility(const FGameplayAbilitySpecH
 // 相关方法
 protected virtual void UGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 void UAbilitySystemComponent::NotifyAbilityEnded(FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability, bool bWasCancelled)
-
-// 相关属性
-ASC::ActivatableAbilities
 ```
 :pencil2: **Start**  
 1: [GA层] 先检测 End 流程能否正常执行, 用于防止被多次调用的情况 

@@ -32,15 +32,16 @@ Game Features 插件本身类似于一个 **Plugin 生成器**, 专门用于制�
 	- **Add new input mappings**
 
 :pushpin: GFA 本身的运转流程是相对独立的, 例如 Lyra 自定义的 `ULyraExperienceDefinition` 可包含多个 GFAs, 并自主驱动其 Activation/Deactivation
-  - :warning: 这里使用 UPROPERTY(Instanced), 以便能够在 Asset 中编辑具体实例
-  ```cpp
-  class ULyraExperienceDefinition : public UPrimaryDataAsset
-  {
-	...
-	UPROPERTY(EditDefaultsOnly, Instanced, Category="Actions")
-	TArray<TObjectPtr<UGameFeatureAction>> Actions;
-  }
-  ```
+
+  - :warning: UPROPERTY(Instanced) 使这些 `UGameFeatureAction` 能够以 instanced subobject 形式内联存储在 Asset 中; 结合 EditInlineNew, 编辑器创建的 GFA 实例会默认以 `ULyraExperienceDefinition` 作为 **Outer**
+	```cpp
+	class ULyraExperienceDefinition : public UPrimaryDataAsset
+	{
+		...
+		UPROPERTY(EditDefaultsOnly, Instanced, Category="Actions")
+		TArray<TObjectPtr<UGameFeatureAction>> Actions;
+	}
+	```
 
 ---
 

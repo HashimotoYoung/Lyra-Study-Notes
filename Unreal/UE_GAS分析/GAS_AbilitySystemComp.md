@@ -2,33 +2,18 @@
 
 ---
 
-### UAbilitySystemComponent 
+### UAbilitySystemComponent
 
 ASC 基本可看作是一个 **Manager** of GAS Elements
-- 继承自 UGameplayTasksComponent
-  - ASC 负责Tick `UAbilityTask`
-- 封装GAS核心APIs给其Owner使用
-- 负责 Replicate GA,GE, AttributeSet
+- 继承自 `UGameplayTasksComponent`
+  - ASC 负责 Tick `UAbilityTask`
+- 负责 Replicate GA, GE, AttributeSet
   - `Attributes` are replicated internally by their owning `AttributeSet`
 <br>
 
 ##### 主要属性:
-`TArray<TObjectPtr<UAttributeSet>> SpawnedAttributes`
-- UPROPERTY(Replicated, ReplicatedUsing=OnRep_SpawnedAttributes)
-- **AttributeSet 相关**, 需注意 `Attributes` are **replicated by their AS**
 
-`FActiveGameplayEffectsContainer ActiveGameplayEffects`
-- UPROPERTY(Replicated)
-- **GameplayEffect 相关**
-
-`FActiveGameplayCueContainer ActiveGameplayCues`  
-`FActiveGameplayCueContainer MinimalReplicationGameplayCues`
-- UPROPERTY(Replicated),   
-  - `MinimalReplicationGameplayCues` 的同步条件为 `COND_SkipOwner`
-- **GameplayCue 相关**
-
-`FGameplayTagCountContainer GameplayTagCountContainer`
-- 记录 **Owned** GameplayTags
+`TSharedPtr<FGameplayAbilityActorInfo>	AbilityActorInfo`: [link](./GAS_GA/GA_Classes.md#fgameplayabilityactorinfo)
 
 `TObjectPtr<AActor> OwnerActor`  
 `TObjectPtr<AActor> AvatarActor`
@@ -43,60 +28,77 @@ ASC 基本可看作是一个 **Manager** of GAS Elements
   AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
   ```
 
+`TArray<TObjectPtr<UAttributeSet>> SpawnedAttributes`
+- UPROPERTY(Replicated, ReplicatedUsing=OnRep_SpawnedAttributes)
+- **AttributeSet 相关**
+
+`FActiveGameplayEffectsContainer ActiveGameplayEffects`
+- UPROPERTY(Replicated)
+- **GameplayEffect 相关**
+
+`FActiveGameplayCueContainer ActiveGameplayCues`  
+`FActiveGameplayCueContainer MinimalReplicationGameplayCues`
+- UPROPERTY(Replicated)
+  - `MinimalReplicationGameplayCues` 的 Rep 条件为 `COND_SkipOwner`
+- **GameplayCue 相关**
+
+`FGameplayTagCountContainer GameplayTagCountContainer`
+- 记录 **Owned** GameplayTags
+
 `EGameplayEffectReplicationMode ReplicationMode`
 - 影响 **Both GE and GC** 的同步方式
 
-`FGameplayAbilityReplicatedDataContainer AbilityTargetDataMap`
-- todo
-
-`TSharedPtr<FGameplayAbilityActorInfo>	AbilityActorInfo` [Link](./GAS_GA/GA_Classes.md#fgameplayabilityactorinfo)
-
-`FPredictionKey	ScopedPredictionKey` [Link](./GAS_ReplicationAndPrediction.md#prediction-原理)
-
 <br>
 
-##### 主要属性(GA):
+##### 主要属性(GA相关):
 
-`FGameplayAbilitySpecContainer ActivatableAbilities`
-- UPROPERTY(ReplicatedUsing=OnRep_ActivateAbilities)
-  - Simulated Proxy 不同步
-  ```cpp
-  Params.Condition = COND_ReplayOrOwner;
-  DOREPLIFETIME_WITH_PARAMS_FAST(UAbilitySystemComponent, ActivatableAbilities, Params);
-  ```
-- :pushpin: 该 ASC 持有的 **GA Specs**, 反映了哪些 GA 可用
+`FGameplayAbilitySpecContainer(:FFastArraySerializer) ActivatableAbilities` :star:
+
+**GA 容器**
+
+- **UPROPERTY**(ReplicatedUsing=OnRep_ActivateAbilities)
+  - 使用 Rep 条件 `COND_ReplayOrOwner`, 因此不同步 Simulated Proxy 
+
+- `ActivatableAbilities.Items` 实际为 **`TArray<FGameplayAbilitySpec>`**,   
+  可进而获取到 GA **CDO**(`AbilitySpec.Ability`) 和 GA 实例 (`AbilitySpec.GetAbilityInstances()`)
 
 `int32 AbilityScopeLockCount`  
 `TArray<FGameplayAbilitySpecHandle, TInlineAllocator<2>> AbilityPendingRemoves`  
 `TArray<FGameplayAbilitySpec, TInlineAllocator<2> > AbilityPendingAdds`
 
-- 这三个属性用于 [Ability Scoped Lock 机制](#ability-scoped-lock-机制)
+- 这三个属性用于 [Ability Scoped Lock 机制](./GAS_GA/GA_Basics.md#ability-scoped-lock)
 
-##### 主要属性(预测):
+`FGameplayAbilityReplicatedDataContainer AbilityTargetDataMap`
 
-`FReplicatedPredictionKeyMap ReplicatedPredictionKeyMap`
-  - UPROPERTY(Replicated)
+- 缓存一次GA激活期间涉及的 Targets 和 Events 等信息, [link](./GAS_TargetData.md)
+
+
+##### 主要属性(Prediction相关):
+
+`FReplicatedPredictionKeyMap ReplicatedPredictionKeyMap`  
+`FPredictionKey	ScopedPredictionKey` 
+- [GAS预测相关](./GAS_Prediction.md)
 
 ---
 
-### :warning: ASC 注意事项:
+#### :warning: 注意事项:
 - `InitAbilityActorInfo()` relies on **Fully-Replicated** `PlayerController`
-  因此通常可以在 PC 中调用以下方法, 以确保初始化完善, 例如:
+  因此通常可以在 PC 中调用以下方法, 以确保初始化完整, 例如:
     ```cpp
     void ALyraPlayerController::OnRep_PlayerState() {
-            Super::OnRep_PlayerState();
-            BroadcastOnPlayerStateChanged();
+      Super::OnRep_PlayerState();
+      BroadcastOnPlayerStateChanged();
 
-            if (GetWorld()->IsNetMode(NM_Client))  {
-                if (ALyraPlayerState* LyraPS = GetPlayerState<ALyraPlayerState>()){
-                    if (ULyraAbilitySystemComponent* LyraASC = LyraPS->GetLyraAbilitySystemComponent()) {
-                        // Calls InitAbilityActorInfo
-                        LyraASC->RefreshAbilityActorInfo();
-                        LyraASC->TryActivateAbilitiesOnSpawn();
-                    }
-                }
-            }
-        }
+      if (GetWorld()->IsNetMode(NM_Client))  {
+          if (ALyraPlayerState* LyraPS = GetPlayerState<ALyraPlayerState>()){
+              if (ULyraAbilitySystemComponent* LyraASC = LyraPS->GetLyraAbilitySystemComponent()) {
+                  // Calls InitAbilityActorInfo
+                  LyraASC->RefreshAbilityActorInfo();
+                  LyraASC->TryActivateAbilitiesOnSpawn();
+              }
+          }
+      }
+    } 
     ```
 
 
