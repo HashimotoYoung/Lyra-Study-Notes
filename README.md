@@ -9,7 +9,7 @@
 - 基于引擎版本 **Unreal Engine 5.2+**
 - 🙏 如发现错误或理解偏差, 欢迎指正和交流
 
-> :pushpin: 寻求 UE Gameplay 方向的工作机会, 有意者可留言
+> :pushpin: 寻求 UE Gameplay 方向的工作机会, 有意者可留个联系方式
 
 ## 🗂️ 文档索引
 
