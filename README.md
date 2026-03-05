@@ -7,8 +7,9 @@
 
 - 主要侧重于 Gameplay 方向
 - 基于引擎版本 **Unreal Engine 5.2+**
+- 🙏 如发现错误或理解偏差, 欢迎指正和交流
 
-*🙏 如发现错误或理解偏差, 欢迎指正和交流*
+> :pushpin: 寻求 UE Gameplay 方向的工作机会, 有意者可留言
 
 ## 🗂️ 文档索引
 
@@ -53,5 +54,7 @@
   - 基于 "碎片" 的组件化物品定义体系
 - [武器系统](./UE_Lyra/Lyra_InventoryAndWeapon/Lyra_Weapon.md#lyra-weapon-and-equipment)
   - 武器装备, 切换与射击逻辑
+
+
 
 
